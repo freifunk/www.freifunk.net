@@ -57,7 +57,11 @@ if ($rssorder == 'asc') $rss_items = array_reverse($rss_items);
 $i=0;
 while ($i < $rssitems) {
 $rsstitle = $rss_items[$i]->get_title();
+$source = ($rss_items[$i]->get_item_tags(SIMPLEPIE_NAMESPACE_RSS_20, 'source'));
+$w = $source[0]['data'];
+if ($w == '') {
 $w = $rss_items[$i]->get_feed()->get_title();
+}
 if ($rss_items[$i]->get_date()) $x = $rss_items[$i]->get_date($rssdateformat);
 $rsslinketitle = $rsstitle;
 if ($rsstitlelength != 'all') { 
@@ -81,7 +85,7 @@ if ($rssdescription == 'no') $z = '';
 if ($enclosure = $rss_items[$i]->get_enclosure()) {
 $p = '<img src="'.$enclosure->get_thumbnail().'" />';
 if (strstr($enclosure->get_type(), 'audio')) {
-$a = do_shortcode( '[podloveaudio title="'. $rsstitle .'" subtitle="'. $z .'" src="'.$enclosure->get_link().'"]');
+$a = do_shortcode( '[podloveaudio src="'.$enclosure->get_link().'" width="80%"]<br />');
 //$a =$enclosure->get_link();
 }
 	}
