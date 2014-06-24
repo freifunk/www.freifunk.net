@@ -1,10 +1,10 @@
 <?php
 /*
-Plugin Name: RSS in Page
-Plugin URI: http://www.titusbicknell.com/wordpress/rss-in-page
+Plugin Name: RSS in Page (for freifunk.net)
+Plugin URI: https://github.com/freifunk/www.freifunk.net/edit/master/wp-plugins/rss-in-page
 Description: short code [rssinpage rssfeed='feedURL'] generates a list of RSS feed items with date, title, link and description; now support muiltiple feed URLs separated by a comma e.g. rssfeed='feedurl1, feedurl2' - optional attributes: rssitems='number' sets the number of items to return, default is 5; rssorder='asc' returns items from oldest to newest, default is 'desc' which returns items from newest to oldest; rsstarget allows for feed link to be opened in new window by setting to '_blank', default is '_self'; rssdateformat allows item date to be formatted using php date parameters, default is RFC 2822 formatted date; rssdescription='no' suppress description display, default is to show it; rsscss allows you to set a css class to style the list, default is the content list style in the theme; rssformat allows you to format the output using format parameters e.g. the default x: Y - w&lt;br&gt;z where x is the date, Y is the title with a link, y is the title, z is the description and w is the feed title; rsstitlelength allows you to truncate the title to a certain character length; rssdescriptionlength allows you to truncate the description to a certain character length; rsstimezone allows you to set the timezone in which the feed datetime will be displayed, default is UTC.
-Version: 2.9.1	
-Author: Titus Bicknell
+Version: 2.9.2f	
+Author: Titus Bicknell, Andreas Braeu
 Author URI: http://titusbicknell.com
 */
 
