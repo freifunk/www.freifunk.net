@@ -175,7 +175,7 @@ function tci_admin_options() {
       		<option value="daily" <?php if ($schedule == 'daily') echo 'selected="selected"'?>>Täglich</option>
     		</select><?php _e("Wie oft sollen die Kalenderfeeds importiert werden?" ); ?>
 				<br/><small>Nächste Ausführung:
-				<?php if ( get_option('tci_schedule') != 'none') { echo date("c", wp_next_scheduled('import_all_feeds'));} else {echo "nicht geplant";}?>
+				<?php if ( wp_next_scheduled('import_all_feeds') ) { echo date("c", wp_next_scheduled('import_all_feeds'));} else {echo "nicht geplant";}?>
 				</small>
 				</p>
         <p class="submit">
