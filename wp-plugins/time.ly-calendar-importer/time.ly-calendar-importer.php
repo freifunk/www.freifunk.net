@@ -20,7 +20,7 @@ function tci_add_calendar($feed, $name) {
 	}
 	$result = $wpdb->query(
 		$wpdb->prepare(
-			"INSERT IGNORE INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) select distinct term_id, 'events_categories', '', '0', '0' from $wpdb->terms where name=%s and slug=%s", $name, $name
+			"INSERT IGNORE INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) select distinct a.term_id, 'events_categories', '', b.term_id, '0' from $wpdb->terms a join $wpdb->terms b on b.slug='community-events' where a.name=%s and a.slug=%s", $name, $name
 		)
 	);
 	if ( $result === false ) {
@@ -31,9 +31,14 @@ function tci_add_calendar($feed, $name) {
 			"INSERT IGNORE INTO " . $wpdb->prefix ."ai1ec_event_category_colors (term_id, term_color) select distinct term_id, '' from $wpdb->terms where name=%s and slug=%s", $name, $name
 		)
 	);
+	$term_id = $wpdb->get_var(
+		$wpdb->prepare(
+			"SELECT distinct term_id FROM $wpdb->terms where slug=%s", $name
+		)
+	);
 	$result = $wpdb->query(
 		$wpdb->prepare(
-			"REPLACE INTO " . $wpdb->prefix . "ai1ec_event_feeds (feed_url, feed_category, feed_tags, comments_enabled, map_display_enabled, keep_tags_categories) VALUES (%s, %s, %s, '0', '0', '0')", $feed['url'], $name, $feed['communityname']
+			"REPLACE INTO " . $wpdb->prefix . "ai1ec_event_feeds (feed_url, feed_category, feed_tags, comments_enabled, map_display_enabled, keep_tags_categories) VALUES (%s, %s, %s, '0', '0', '0')", $feed['url'], $term_id, $feed['communityname']
 		)
 	);
 	if ( $result === false ) {
