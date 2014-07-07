@@ -183,7 +183,7 @@ function tci_admin_options() {
         </p>
     </form>
 </div>
-<?
+<?php
 }
 
 function tci_admin_actions() {
