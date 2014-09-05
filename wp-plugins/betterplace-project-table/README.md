@@ -1,4 +1,5 @@
-=== Plugin Name ===
+Plugin Name
+===========
 Contributors: andibraeu
 Donate link: http://www.weimarnetz.de/spenden
 Tags: betterplace,donations 
@@ -6,7 +7,8 @@ Requires at least: 3.6
 Tested up to: 3.6
 Stable tag: trunk
 
-== Description ==
+Description
+------------
 This plugin provides betterplace projects as a html table. You can use a shortcode to embed it in your page: [bpprojecttable projects='12345,23456#anchor,34567']
 
 Options are:
