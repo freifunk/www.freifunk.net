@@ -26,11 +26,6 @@ function tci_add_calendar($feed, $name) {
 	if ( $result === false ) {
 		return "error";
 	}
-	$result = $wpdb->query(
-		$wpdb->prepare(
-			"INSERT IGNORE INTO " . $wpdb->prefix ."ai1ec_event_category_colors (term_id, term_color) select distinct term_id, '' from $wpdb->terms where name=%s and slug=%s", $name, $name
-		)
-	);
 	$term_id = $wpdb->get_var(
 		$wpdb->prepare(
 			"SELECT distinct term_id FROM $wpdb->terms where slug=%s", $name
