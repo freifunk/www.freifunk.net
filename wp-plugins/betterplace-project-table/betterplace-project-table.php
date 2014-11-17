@@ -10,13 +10,31 @@
   License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
+include_once("bpt/class.ffapi.php");
+include_once("bpt/class.bpproject.php");
+
 function betterplaceprojecttable($atts) {
   extract(shortcode_atts( array(
     'projects' => 'no_project',
-    'bpApiUrl' => 'https://api.betterplace.org/de/api_v4/projects/'
+    'bpApiUrl' => 'https://api.betterplace.org/de/api_v4/projects/',
+    'orderBy' => 'openAmount',
+    'sort' => 'asc'
   ), $atts ) ) ;
 
-  $bpProjects = explode(",", $projects);
+    $ffapi = new ffapi("http://freifunk.net/ffmap/ffSummarizedDir.json");
+    $projects = $ffapi->getValues("support.donations");
+    $bpProjects = array();
+
+    foreach($projects as $project) {
+        if ($project['provider'] = "betterplace") {
+            $bp = new bpProject($project['campaignId']);
+            array_push($bpProjects, $bp->getProjectArray());
+        }
+    }
+
+    usort($bpProjects, function($a, $b) {
+        return $a[$orderBy] - $b[$orderBy];
+    });
 ?>
 <table>
 <thead>
@@ -30,43 +48,19 @@ function betterplaceprojecttable($atts) {
 </thead>
 
 <?php
-  foreach($bpProjects as $projectStr) {
-    $projectArray = explode("#", $projectStr);
-    $project = $projectArray[0];
-    $anchor = null;
-    if ($projectArray[1]) {
-      $anchor = $projectArray[1];
-    }
-    $prjDetails = file_get_contents($bpApiUrl . $project . ".json");
-    $prjDetailsJson = json_decode($prjDetails, true);
-    foreach($prjDetailsJson['links'] as $links) {
-      if ($links['rel'] == 'platform') {
-        $prjLink = $links['href'];
-      } elseif ($links['rel'] == 'new_donation' ) {
-        $prjDonationLink = $links['href'];
-      }
-    }
-    foreach($prjDetailsJson['profile_picture']['links'] as $pic) {
-      if ($pic['rel'] == 'fill_270x141') {
-        $prjPic = $pic['href'];
-      }
-    }
+  foreach($bpProjects as $bpProject) {
     echo "<tr>";
     echo "<td>";
-    if ($anchor) {
-      echo "<a href=\"#". $anchor ."\">";
-    }
-    echo "<img src=\"" . $prjPic . "\" alt=\"" . $prjDetailsJson['title'] . "\" height=\"50px\" />";
-    if ($anchor) {
-      echo "</a>";
-    }
+    echo "<a href=\"#". "test" ."\">";
+    echo "<img src=\"" . $bpProject['projectImage'] . "\" alt=\"" . $bpProject['projectTitle'] . "\" height=\"50px\" />";
+    echo "</a>";
     echo "</td>";
-    echo "<td><a href=\"". $prjLink  ."\" target=\"_blank\">". $prjDetailsJson['title'] . "</a></td>";
-    echo "<td>" . $prjDetailsJson['open_amount_in_cents']/100 ." €</td>";
-    echo "<td>" . $prjDetailsJson['incomplete_need_count'] . "</td>";
-    echo "<td>" . $prjDetailsJson['progress_percentage'] . " %</td>";
-    echo "<td>" . $prjDetailsJson['donor_count'] . "</td>";
-    echo "<td><a href=\"" . $prjDonationLink . "\" target=\"_blank\">Direkt spenden...</a></td>";
+    echo "<td><a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\">". $bpProject['projectTitle'] . "</a></td>";
+    echo "<td>" . $bpProject['openAmount']/100 ." €</td>";
+    echo "<td>" . $bpProject['incompletedNeed'] . "</td>";
+    echo "<td>" . $bpProject['progress'] . " %</td>";
+    echo "<td>" . $bpProject['donors'] . "</td>";
+    echo "<td><a href=\"" . $bpProject['donationLink']. "\" target=\"_blank\">Direkt spenden...</a></td>";
     echo "</tr>";
   }
 ?>
