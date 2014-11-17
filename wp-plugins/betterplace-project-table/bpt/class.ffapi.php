@@ -11,11 +11,15 @@ class ffapi {
 	private $summarizedApiUrl;
 	private $summarizedApi;
 
+    private function isAssoc($arr){
+        return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+
 	function __construct( $summarizedApiUrl ) {
 		$this->summarizedApiUrl = $summarizedApiUrl;
 		$rawFile = file_get_contents($this->getSummarizedApiUrl());
 		$json = json_decode($rawFile, true);
-		$this->SummarizedApi = $json;
+		$this->summarizedApi = $json;
 	}
 
 
@@ -30,7 +34,7 @@ class ffapi {
         foreach($this->summarizedApi as $community) {
             array_push($result, $this->getValuesFromCommunity($community, $path));
         }
-        return $result;
+        return array_values(array_filter($result));
 	}
 
     /**
@@ -39,9 +43,28 @@ class ffapi {
      * @return array
      *
      */
-    private function getValuesFromCommunity($community, $path){
+    private function getValuesFromCommunity($community, $path)
+    {
+        $result = null;
         $pathArray = explode(".", $path);
-        return array();
+        if (count($pathArray) > 1) {
+            $element = array_shift($pathArray);
+            if (!empty($community[$element])) {
+                if ($this->isAssoc($community[$element])) {
+                    $result = $this->getValuesFromCommunity($community[$element], implode(".", $pathArray));
+                } else {
+                    $result = array();
+                    foreach($community[$element] as $cElement) {
+                        array_push($result, $this->getValuesFromCommunity($cElement, implode(".", $pathArray)));
+                    }
+                }
+            }
+        } else {
+            if (! empty($community[$pathArray[0]])) {
+                $result = $community[$pathArray[0]];
+            }
+        }
+        return $result;
     }
 
 	/**
