@@ -38,7 +38,7 @@ function betterplaceprojecttable($atts) {
       $anchor = $projectArray[1];
     }
     $prjDetails = file_get_contents($bpApiUrl . $project . ".json");
-    $prjDetailsJson = json_decode($prjDetails, trule);
+    $prjDetailsJson = json_decode($prjDetails, true);
     foreach($prjDetailsJson['links'] as $links) {
       if ($links['rel'] == 'platform') {
         $prjLink = $links['href'];

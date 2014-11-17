@@ -37,6 +37,5 @@ class ffapiTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($results, $expected);
     }
 
-
 }
  
