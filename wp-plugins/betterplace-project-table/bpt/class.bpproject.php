@@ -10,6 +10,7 @@ class bpProject {
 
     const bpApiUrl = "https://api.betterplace.org/de/api_v4/projects/";
     private $campaignId;
+    private $key;
     private $projectLink;
     private $donationLink;
     private $projectImage;
@@ -17,11 +18,12 @@ class bpProject {
     private $openAmount;
     private $incompleteNeed;
     private $progress;
-    private $donors;function
+    private $donors;
 
-    __construct($campaignId)
+    function __construct($campaignId, $key)
     {
         $this->campaignId = $campaignId;
+        $this->key = $key;
         $this->getProjectDetails();
     }
 
@@ -51,6 +53,7 @@ class bpProject {
 
     public function getProjectArray() {
         $return = array();
+        $return['key'] = $this->key;
         $return['projectLink'] = $this->projectLink;
         $return['donationLink'] = $this->donationLink;
         $return['projectImage'] = $this->projectImage;

@@ -31,10 +31,13 @@ class ffapi {
 	 */
 	public function getValues($path) {
         $result = array();
-        foreach($this->summarizedApi as $community) {
-            array_push($result, $this->getValuesFromCommunity($community, $path));
+        foreach($this->summarizedApi as $name => $community) {
+            $values = $this->getValuesFromCommunity($community, $path);
+            if ( ! empty($values)) {
+                $result[$name] = $values;
+            }
         }
-        return array_values(array_filter($result));
+        return $result;
 	}
 
     /**

@@ -14,7 +14,7 @@ class bpProjectTest extends PHPUnit_Framework_TestCase {
 
     function __construct()
     {
-        $this->project = new bpProject("14895");
+        $this->project = new bpProject("14895", "weimarnetz");
     }
 
     public function testCampaign()
