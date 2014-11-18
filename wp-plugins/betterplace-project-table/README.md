@@ -10,6 +10,7 @@ Stable tag: trunk
 Description
 ------------
 This plugin provides betterplace projects as a html table. You can use a shortcode to embed it in your page: [bpprojecttable orderBy='progress']
+Requires the Progress Bar Plugin
 
 Options are:
 * orderBy: to order the output by one of the following fields: key, openAmount, incompleteNeed, progress, donors
