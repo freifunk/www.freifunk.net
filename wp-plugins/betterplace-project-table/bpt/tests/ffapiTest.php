@@ -20,19 +20,19 @@ class ffapiTest extends PHPUnit_Framework_TestCase {
 
     public function testGetEmails()
     {
-        $expected = array("kontakt@freifunk-mainz.de", "kontakt@weimarnetz.de");
+        $expected = array("mainz" => "kontakt@freifunk-mainz.de", "weimarnetz" => "kontakt@weimarnetz.de");
         $results = $this->api->getValues("contact.email");
         $this->assertEquals($results, $expected);
     }
 
     public function testGetCampaigns() {
-        $expected = array(array("14895"));
+        $expected = array("weimarnetz" => array("14895"));
         $results = $this->api->getValues("support.donations.campaigns.projectid");
         $this->assertEquals($results, $expected);
     }
 
     public function testGetServices() {
-        $expected = array(array("DynDNS Server", "Weimarnetz Radio powered by Bernd"));
+        $expected = array("weimarnetz" => array("DynDNS Server", "Weimarnetz Radio powered by Bernd"));
         $results = $this->api->getValues("services.serviceName");
         $this->assertEquals($results, $expected);
     }
