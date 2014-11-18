@@ -21,16 +21,20 @@ function betterplaceprojecttable($atts) {
     'sort' => 'asc'
   ), $atts ) ) ;
 
-    $ffapi = new ffapi("http://freifunk.net/ffmap/ffSummarizedDir.json");
-    $projects = $ffapi->getValues("support.donations");
+    $ffapi = new ffapi("http://freifunk.net/map/ffSummarizedDir.json");
+    $campaigns = $ffapi->getValues("support.donations.campaigns");
     $bpProjects = array();
 
-    foreach($projects as $project) {
-        if ($project['provider'] = "betterplace") {
-            $bp = new bpProject($project['campaignId']);
-            array_push($bpProjects, $bp->getProjectArray());
+    foreach($campaigns as $projects) {
+        foreach ($projects as $project) {
+            if ($project['provider'] = "betterplace") {
+                $bp = new bpProject($project['projectid']);
+                array_push($bpProjects, $bp->getProjectArray());
+            }
         }
     }
+
+    print_r($campaigns);
 
     usort($bpProjects, function($a, $b) {
         return $a[$orderBy] - $b[$orderBy];
