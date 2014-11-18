@@ -15,56 +15,55 @@ include_once("bpt/class.bpproject.php");
 
 function betterplaceprojecttable($atts) {
   extract(shortcode_atts( array(
-    'projects' => 'no_project',
-    'bpApiUrl' => 'https://api.betterplace.org/de/api_v4/projects/',
     'orderBy' => 'openAmount',
-    'sort' => 'asc'
+    'sort' => 'desc'
   ), $atts ) ) ;
 
     $ffapi = new ffapi("http://freifunk.net/map/ffSummarizedDir.json");
     $campaigns = $ffapi->getValues("support.donations.campaigns");
     $bpProjects = array();
 
-    foreach($campaigns as $projects) {
+    $campaigns = array_unique($campaigns, SORT_REGULAR);
+    foreach($campaigns as $name => $projects) {
         foreach ($projects as $project) {
             if ($project['provider'] = "betterplace") {
-                $bp = new bpProject($project['projectid']);
+                $bp = new bpProject($project['projectid'], $name);
                 array_push($bpProjects, $bp->getProjectArray());
             }
         }
     }
 
-    print_r($campaigns);
 
-    usort($bpProjects, function($a, $b) {
+    usort($bpProjects, function($a, $b) use ($orderBy) {
         return $a[$orderBy] - $b[$orderBy];
     });
-?>
+    if ($sort == "desc") {
+        $bpProjects = array_reverse($bpProjects);
+    }
+
+
+    ?>
 <table>
 <thead>
-  <th></th>
   <th>Projekt</th>
-  <th>Noch offen</th>
-  <th># Bedarfe</th>
-  <th>% Erreicht</th>
-  <th># Spenden</th>
-  <th></th>
+  <th>Offener Betrag</th>
+  <th>Anzahl Bedarfe</th>
+  <th>Fortschritt</th>
+  <th>Spenden</th>
 </thead>
 
 <?php
   foreach($bpProjects as $bpProject) {
     echo "<tr>";
     echo "<td>";
-    echo "<a href=\"#". "test" ."\">";
-    echo "<img src=\"" . $bpProject['projectImage'] . "\" alt=\"" . $bpProject['projectTitle'] . "\" height=\"50px\" />";
+    echo "<a href=\"#". $bpProject['key'] ."\">";
+    echo "<img src=\"" . $bpProject['projectImage'] . "\" title=\"" . $bpProject['projectTitle'] . "\" height=\"50px\" />";
     echo "</a>";
     echo "</td>";
-    echo "<td><a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\">". $bpProject['projectTitle'] . "</a></td>";
     echo "<td>" . $bpProject['openAmount']/100 ." €</td>";
-    echo "<td>" . $bpProject['incompletedNeed'] . "</td>";
-    echo "<td>" . $bpProject['progress'] . " %</td>";
-    echo "<td>" . $bpProject['donors'] . "</td>";
-    echo "<td><a href=\"" . $bpProject['donationLink']. "\" target=\"_blank\">Direkt spenden...</a></td>";
+    echo "<td>" . $bpProject['incompleteNeed'] . "</td>";
+    echo "<td width=50%>" . do_shortcode("[wppb progress=" . $bpProject['progress']. " fullwidth=false option=flat location=inside color=#dc0067]") . "</td>";
+      echo "<td><a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\">". $bpProject['projectTitle'] . "</a></td>";
     echo "</tr>";
   }
 ?>
