@@ -47,9 +47,9 @@ function betterplaceprojecttable($atts) {
 <thead>
   <th>Projekt</th>
   <th>Offener Betrag</th>
-  <th>Anzahl Bedarfe</th>
+  <th>Bedarfe</th>
   <th>Fortschritt</th>
-  <th>Spenden</th>
+  <th>Spendenlink</th>
 </thead>
 
 <?php
@@ -62,7 +62,7 @@ function betterplaceprojecttable($atts) {
     echo "</td>";
     echo "<td>" . $bpProject['openAmount']/100 ." €</td>";
     echo "<td>" . $bpProject['incompleteNeed'] . "</td>";
-    echo "<td width=50%>" . do_shortcode("[wppb progress=" . $bpProject['progress']. " fullwidth=false option=flat location=inside color=#dc0067]") . "</td>";
+    echo "<td>" . do_shortcode("[wppb progress=" . $bpProject['progress']. " fullwidth=false option=flat location=inside color=#dc0067]") . "</td>";
       echo "<td><a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\">". $bpProject['projectTitle'] . "</a></td>";
     echo "</tr>";
   }
