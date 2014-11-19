@@ -6,6 +6,8 @@
  * Time: 18:21
  */
 
+include_once("class.donations.php");
+
 class bpProject extends DonationCampaigns {
 
     const bpApiUrl = "https://api.betterplace.org/de/api_v4/projects/";
@@ -22,7 +24,7 @@ class bpProject extends DonationCampaigns {
         }
         foreach($prjDetailsJson['profile_picture']['links'] as $pic) {
             if ($pic['rel'] == 'fill_270x141') {
-                $this->getProjectImage($pic['href']);
+                $this->setProjectImage($pic['href']);
             }
         }
 

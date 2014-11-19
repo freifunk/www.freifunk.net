@@ -10,8 +10,10 @@
   License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
+include_once("bpt/DonationFactory.php");
 include_once("bpt/class.ffapi.php");
 include_once("bpt/class.bpproject.php");
+
 
 function betterplaceprojecttable($atts) {
   extract(shortcode_atts( array(
@@ -20,16 +22,15 @@ function betterplaceprojecttable($atts) {
   ), $atts ) ) ;
 
     $ffapi = new ffapi("http://freifunk.net/map/ffSummarizedDir.json");
+    $df = new DonationFactory();
     $campaigns = $ffapi->getValues("support.donations.campaigns");
     $bpProjects = array();
 
     $campaigns = array_unique($campaigns, SORT_REGULAR);
     foreach($campaigns as $name => $projects) {
         foreach ($projects as $project) {
-            if ($project['provider'] = "betterplace") {
-                $bp = new bpProject($project['projectid'], $name);
-                array_push($bpProjects, $bp->getProjectArray());
-            }
+            $bp = $df->getDonationClass($project['provider'], $project['projectid'], $name);
+            array_push($bpProjects, $bp->getProjectArray());
         }
     }
 
