@@ -43,6 +43,7 @@ function betterplaceprojecttable($atts) {
 
 
     ?>
+<div class="betterplace-table">
 <table>
 <thead>
   <th>Projekt</th>
@@ -68,6 +69,7 @@ function betterplaceprojecttable($atts) {
   }
 ?>
 </table>
+</div>
 <?php
 }
 
