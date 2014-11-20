@@ -23,23 +23,23 @@ function betterplaceprojecttable($atts) {
 
     $ffapi = new ffapi("http://freifunk.net/map/ffSummarizedDir.json");
     $df = new DonationFactory();
-    $campaigns = $ffapi->getValues("support.donations.campaigns");
-    $bpProjects = array();
+    $communityCampaigns = $ffapi->getValues("support.donations.campaigns");
+    $donationProjects = array();
 
-    $campaigns = array_unique($campaigns, SORT_REGULAR);
-    foreach($campaigns as $name => $projects) {
-        foreach ($projects as $project) {
-            $bp = $df->getDonationClass($project['provider'], $project['projectid'], $name);
-            array_push($bpProjects, $bp->getProjectArray());
+    $communityCampaigns = array_unique($communityCampaigns, SORT_REGULAR);
+    foreach($communityCampaigns as $communityName => $projectsPerCommunity) {
+        foreach ($projectsPerCommunity as $singleCommunityProject) {
+            $donationProject = $df->getDonationClass($singleCommunityProject['provider'], $singleCommunityProject['projectid'], $communityName);
+            array_push($donationProjects, $donationProject->getProjectArray());
         }
     }
 
 
-    usort($bpProjects, function($a, $b) use ($orderBy) {
+    usort($donationProjects, function($a, $b) use ($orderBy) {
         return $a[$orderBy] - $b[$orderBy];
     });
     if ($sort == "desc") {
-        $bpProjects = array_reverse($bpProjects);
+        $donationProjects = array_reverse($donationProjects);
     }
 
 
@@ -55,17 +55,17 @@ function betterplaceprojecttable($atts) {
 </thead>
 
 <?php
-  foreach($bpProjects as $bpProject) {
+  foreach($donationProjects as $singleProject) {
     echo "<tr>";
     echo "<td>";
-    echo "<a href=\"#". $bpProject['key'] ."\">";
-    echo "<img src=\"" . $bpProject['projectImage'] . "\" title=\"" . $bpProject['projectTitle'] . "\" height=\"50px\" />";
+    echo "<a href=\"#". $singleProject['key'] ."\">";
+    echo "<img src=\"" . $singleProject['projectImage'] . "\" title=\"" . $singleProject['projectTitle'] . "\" height=\"50px\" />";
     echo "</a>";
     echo "</td>";
-    echo "<td>" . $bpProject['openAmount']/100 ." €</td>";
-    echo "<td>" . $bpProject['incompleteNeed'] . "</td>";
-    echo "<td>" . do_shortcode("[wppb progress=" . $bpProject['progress']. " fullwidth=false option=flat location=inside color=#dc0067]") . "</td>";
-      echo "<td><a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\">". $bpProject['projectTitle'] . "</a></td>";
+    echo "<td>" . $singleProject['openAmount']/100 ." €</td>";
+    echo "<td>" . $singleProject['incompleteNeed'] . "</td>";
+    echo "<td>" . do_shortcode("[wppb progress=" . $singleProject['progress']. " fullwidth=false option=flat location=inside color=#dc0067]") . "</td>";
+      echo "<td><a href=\"". $singleProject['projectLink']  ."\" target=\"_blank\">". $singleProject['projectTitle'] . "</a></td>";
     echo "</tr>";
   }
 ?>
