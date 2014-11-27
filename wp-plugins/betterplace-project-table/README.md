@@ -22,5 +22,6 @@ Changes
 * use transient "cache"
 * set timeout for network requests, cache and url
 * open amount rounded
+* table is sortable
 1.2.0
 * optimized output table
