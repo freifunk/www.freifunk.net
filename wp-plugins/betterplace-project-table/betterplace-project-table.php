@@ -44,19 +44,20 @@ function betterplaceprojecttable($atts) {
     if ($sort == "desc") {
         $bpProjects = array_reverse($bpProjects);
     }
+    wp_enqueue_script( 'sortable', get_template_directory_uri() . '/js/sorttable.js', array(), null, true );
 
 
     ?>
 <div class="betterplace-table">
-<table>
+<table class="sortable">
 <thead>
   <th>Projektname</th>
   <th>Organisation</th>
-  <th>Offener Betrag</th>
-  <th>Bedarfe</th>
-  <th>Spender</th>
-  <th>Fortschritt</th>
-  <th>Spendenlink</th>
+  <th class="sorttable_numeric">Offener Betrag</th>
+  <th class="sorttable_numeric">Bedarfe</th>
+  <th class="sorttable_numeric">Spender</th>
+  <th class="sorttable_numeric">Fortschritt</th>
+  <th class="sorttable_nosort">Spendenlink</th>
 </thead>
 
 <?php
@@ -67,7 +68,7 @@ function betterplaceprojecttable($atts) {
     echo "<td>" . round($bpProject['openAmount']/100) ." €</td>";
     echo "<td>" . $bpProject['incompleteNeed'] . "</td>";
     echo "<td>" . $bpProject['donors'] . "</td>";
-    echo "<td>" . do_shortcode("[wppb progress=" . $bpProject['progress']. " fullwidth=false option=flat location=inside color=#dc0067]") . "</td>";
+    echo "<td sorttable_customkey='".$bpProject['progress']."'>" . do_shortcode("[wppb progress=" . $bpProject['progress']. " fullwidth=false option=flat location=inside color=#dc0067]") . "</td>";
       echo "<td><a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\">direkt spenden...</a></td>";
     echo "</tr>";
   }
