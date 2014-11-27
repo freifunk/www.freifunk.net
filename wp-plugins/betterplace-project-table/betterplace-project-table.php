@@ -21,7 +21,7 @@ function betterplaceprojecttable($atts) {
     'sort' => 'desc'
   ), $atts ) ) ;
 
-    $ffapi = new ffapi("http://freifunk.net/map/ffSummarizedDir.json");
+    $ffapi = new ffapi(get_option('ffapi_summarized_dir'));
     $df = new DonationFactory();
     $campaigns = $ffapi->getValues("support.donations.campaigns");
     $bpProjects = array();
@@ -76,6 +76,9 @@ function betterplaceprojecttable($atts) {
 </div>
 <?php
 }
+
+add_option('ffapi_summarized_dir', "http://freifunk.net/map/ffSummarizedDir.json");
+add_option('http_timeout', 2);
 
 add_shortcode("bpprojecttable", "betterplaceprojecttable");
 ?>
