@@ -29,7 +29,10 @@ function betterplaceprojecttable($atts) {
     $campaigns = array_unique($campaigns, SORT_REGULAR);
     foreach($campaigns as $name => $projects) {
         foreach ($projects as $project) {
-            $bp = $df->getDonationClass($project['provider'], $project['projectid'], $name);
+            if ( false === ( $bp = get_transient( $project['provider'].$project['projectid'] ) ) ) {
+                $bp = $df->getDonationClass($project['provider'], $project['projectid'], $name);
+                set_transient( $project['provider'].$project['projectid'], $bp, HOUR_IN_SECONDS );
+            }
             array_push($bpProjects, $bp->getProjectArray());
         }
     }
