@@ -44,7 +44,6 @@ function betterplaceprojecttable($atts) {
     if ($sort == "desc") {
         $bpProjects = array_reverse($bpProjects);
     }
-    print(get_template_directory_uri());
     wp_enqueue_script( 'sortable', get_template_directory_uri() . '/js/sorttable.js', array(), null, false );
 
 
