@@ -3,7 +3,7 @@
   Plugin Name: Betterplace Projects Table
   Plugin URI: https://github.com/freifunk/www.freifunk.net
   Description: creates a table of given betterplace donation projects
-  Version: 1.3.0
+  Version: 1.3.1
   Author: Andreas Bräu
   Author URI: http://blog.andi95.de
   License: GPLv2 or later
@@ -44,19 +44,20 @@ function betterplaceprojecttable($atts) {
     if ($sort == "desc") {
         $bpProjects = array_reverse($bpProjects);
     }
-    wp_enqueue_script( 'sortable', get_template_directory_uri() . '/js/sorttable.js', array(), null, true );
+    print(get_template_directory_uri());
+    wp_enqueue_script( 'sortable', get_template_directory_uri() . '/js/sorttable.js', array(), null, false );
 
 
     ?>
 <div class="betterplace-table">
-<table class="sortable">
+<table class="sortable betterplace-table">
 <thead>
-  <th>Projektname</th>
-  <th>Organisation</th>
-  <th class="sorttable_numeric">Offener Betrag</th>
-  <th class="sorttable_numeric">Bedarfe</th>
-  <th class="sorttable_numeric">Spender</th>
-  <th class="sorttable_numeric">Fortschritt</th>
+  <th <?php if ($orderBy == "projectTitle") {echo "class='sorttable_sorted'";}?>>Projektname<?php if ($orderBy == "projectTitle") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
+  <th <?php if ($orderBy == "organization") {echo "class='sorttable_sorted'";}?>>Organisation<?php if ($orderBy == "organization") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
+  <th class="sorttable_numeric<?php if ($orderBy == "openAmount") {echo " sorttable_sorted";}?>">Offener Betrag <?php if ($orderBy == "openAmount") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
+  <th class="sorttable_numeric<?php if ($orderBy == "incompleteNeed") {echo " sorttable_sorted";}?>">Bedarfe<?php if ($orderBy == "incompleteNeed") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
+  <th class="sorttable_numeric<?php if ($orderBy == "donors") {echo " sorttable_sorted";}?>">Spender<?php if ($orderBy == "donors") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
+  <th class="sorttable_numeric<?php if ($orderBy == "progress") {echo " sorttable_sorted";}?>">Fortschritt<?php if ($orderBy == "progress") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
   <th class="sorttable_nosort">Spendenlink</th>
 </thead>
 
