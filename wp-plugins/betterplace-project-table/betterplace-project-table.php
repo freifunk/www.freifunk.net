@@ -31,7 +31,7 @@ function betterplaceprojecttable($atts) {
         foreach ($projects as $project) {
             if ( false === ( $bp = get_transient( $project['provider'].$project['projectid'] ) ) ) {
                 $bp = $df->getDonationClass($project['provider'], $project['projectid'], $name);
-                set_transient( $project['provider'].$project['projectid'], $bp, HOUR_IN_SECONDS );
+                set_transient( $project['provider'].$project['projectid'], $bp, get_option('cache_timeout') );
             }
             array_push($bpProjects, $bp->getProjectArray());
         }
@@ -79,6 +79,7 @@ function betterplaceprojecttable($atts) {
 
 add_option('ffapi_summarized_dir', "http://freifunk.net/map/ffSummarizedDir.json");
 add_option('http_timeout', 2);
+add_option('cache_timeout', 1 * HOUR_IN_SECONDS);
 
 add_shortcode("bpprojecttable", "betterplaceprojecttable");
 ?>
