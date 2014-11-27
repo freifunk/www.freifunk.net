@@ -60,7 +60,7 @@ abstract class DonationCampaigns {
     {
         $this->organization = $organization;
     }
-    
+
     /**
      * @return mixed
      */

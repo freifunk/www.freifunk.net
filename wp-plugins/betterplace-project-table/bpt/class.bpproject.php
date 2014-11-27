@@ -33,6 +33,7 @@ class bpProject extends DonationCampaigns {
         $this->setIncompleteNeed($prjDetailsJson['incomplete_need_count']);
         $this->setProgress($prjDetailsJson['progress_percentage']);
         $this->setDonors($prjDetailsJson['donor_count']);
+        $this->setOrganization($prjDetailsJson['carrier']['name']);
         return $this;
     }
 
