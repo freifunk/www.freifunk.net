@@ -3,7 +3,7 @@
   Plugin Name: Betterplace Projects Table
   Plugin URI: https://github.com/freifunk/www.freifunk.net
   Description: creates a table of given betterplace donation projects
-  Version: 1.0.0
+  Version: 1.2.0
   Author: Andreas Bräu
   Author URI: http://andi95.de
   License: GPLv2 or later
@@ -47,9 +47,11 @@ function betterplaceprojecttable($atts) {
 <div class="betterplace-table">
 <table>
 <thead>
-  <th>Projekt</th>
+  <th>Projektname</th>
+  <th>Organisation</th>
   <th>Offener Betrag</th>
   <th>Bedarfe</th>
+  <th>Spender</th>
   <th>Fortschritt</th>
   <th>Spendenlink</th>
 </thead>
@@ -57,15 +59,13 @@ function betterplaceprojecttable($atts) {
 <?php
   foreach($bpProjects as $bpProject) {
     echo "<tr>";
-    echo "<td>";
-    echo "<a href=\"#". $bpProject['key'] ."\">";
-    echo "<img src=\"" . $bpProject['projectImage'] . "\" title=\"" . $bpProject['projectTitle'] . "\" height=\"50px\" />";
-    echo "</a>";
-    echo "</td>";
+    echo "<td><a href=\"#". $bpProject['key'] ."\">".$bpProject['projectTitle']."</a></td>";
+    echo "<td>" . $bpProject['organization'] . "</td>";
     echo "<td>" . $bpProject['openAmount']/100 ." €</td>";
     echo "<td>" . $bpProject['incompleteNeed'] . "</td>";
+    echo "<td>" . $bpProject['donors'] . "</td>";
     echo "<td>" . do_shortcode("[wppb progress=" . $bpProject['progress']. " fullwidth=false option=flat location=inside color=#dc0067]") . "</td>";
-      echo "<td><a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\">". $bpProject['projectTitle'] . "</a></td>";
+      echo "<td><a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\">direkt spenden...</a></td>";
     echo "</tr>";
   }
 ?>
