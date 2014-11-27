@@ -3,9 +3,9 @@
   Plugin Name: Betterplace Projects Table
   Plugin URI: https://github.com/freifunk/www.freifunk.net
   Description: creates a table of given betterplace donation projects
-  Version: 1.2.0
+  Version: 1.3.0
   Author: Andreas Bräu
-  Author URI: http://andi95.de
+  Author URI: http://blog.andi95.de
   License: GPLv2 or later
   License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */

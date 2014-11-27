@@ -15,3 +15,12 @@ Requires the Progress Bar Plugin
 Options are:
 * orderBy: to order the output by one of the following fields: key, openAmount, incompleteNeed, progress, donors
 * sort: whether to order ascending (asc) oder descending (desc)
+
+Changes
+-------
+1.3.0
+* use transient "cache"
+* set timeout for network requests, cache and url
+* open amount rounded
+1.2.0
+* optimized output table
