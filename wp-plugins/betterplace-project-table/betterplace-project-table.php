@@ -70,13 +70,13 @@ function betterplaceprojecttable($atts) {
 <?php
   foreach($bpProjects as $bpProject) {
     echo "<tr>";
-    echo "<td>".$bpProject['projectTitle']."<br/>";
+    echo "<td class=\"organization\">".$bpProject['projectTitle']."<br/>";
     echo "<a href=\"#". $bpProject['organization'] ."\">" . $bpProject['organization'] . "</a></td>";
-    echo "<td>" . $bpProject['incompleteNeed'] . "</td>";
-    echo "<td>" . $bpProject['completedNeed'] . "</td>";
-    echo "<td>" . $bpProject['donors'] . "</td>";
-    echo "<td sorttable_customkey='".$bpProject['progress']."'>" . do_shortcode("[wppb progress=" . $bpProject['progress']. " fullwidth=false option=flat location=inside color=#009ee0]") . "</td>";
-    echo "<td sorttable_customkey='".$bpProject['openAmount']."'>Es fehlen noch ".round($bpProject['openAmount']/100). " €<a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\"><button>Jetzt spenden!</button></a></td>";
+    echo "<td class=\"numeric\">" . $bpProject['incompleteNeed'] . "</td>";
+    echo "<td class=\"numeric\">" . $bpProject['completedNeed'] . "</td>";
+    echo "<td class=\"numeric\">" . $bpProject['donors'] . "</td>";
+    echo "<td class=\"progress\" sorttable_customkey='".$bpProject['progress']."'>" . do_shortcode("[wppb progress=" . $bpProject['progress']. " fullwidth=false option=flat location=inside color=#009ee0]") . "</td>";
+    echo "<td class=\"donor\" sorttable_customkey='".$bpProject['openAmount']."'>Es fehlen noch ".round($bpProject['openAmount']/100). " €<a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\"><button>Jetzt spenden!</button></a></td>";
     echo "</tr>";
   }
 ?>
