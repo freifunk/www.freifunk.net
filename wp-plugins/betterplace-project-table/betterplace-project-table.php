@@ -60,7 +60,7 @@ function betterplaceprojecttable($atts) {
 <table class="sortable betterplace-table">
 <thead>
   <th <?php if ($orderBy == "projectTitle") {echo "class='sorttable_sorted'";}?>>Projekt/Träger<?php if ($orderBy == "projectTitle") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
-  <th class="sorttable_numeric<?php if ($orderBy == "incompleteNeed") {echo " sorttable_sorted";}?>">Offene Bedarfe<?php if ($orderBy == "incompleteNeed") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
+  <th class="sorttable_numeric<?php if ($orderBy == "incompleteNeed") {echo " sorttable_sorted";}?>">Bedarfe<?php if ($orderBy == "incompleteNeed") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
   <th class="sorttable_numeric<?php if ($orderBy == "completedNeed") {echo " sorttable_sorted";}?>">Erfüllt<?php if ($orderBy == "completedNeed") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
   <th class="sorttable_numeric<?php if ($orderBy == "donors") {echo " sorttable_sorted";}?>">Spender<?php if ($orderBy == "donors") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
   <th class="sorttable_numeric<?php if ($orderBy == "progress") {echo " sorttable_sorted";}?>">Fortschritt<?php if ($orderBy == "progress") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
