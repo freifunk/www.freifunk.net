@@ -3,7 +3,7 @@
   Plugin Name: Betterplace Projects Table
   Plugin URI: https://github.com/freifunk/www.freifunk.net
   Description: creates a table of given betterplace donation projects
-  Version: 1.3.1
+  Version: 1.3.2
   Author: Andreas Bräu
   Author URI: http://blog.andi95.de
   License: GPLv2 or later
@@ -49,7 +49,7 @@ function betterplaceprojecttable($atts) {
     usort($bpProjects, function($a, $b) use ($orderBy) {
         return $a[$orderBy] - $b[$orderBy];
     });
-    if ($sort == "desc") {
+    if ( ! empty($sort) && $sort == "desc") {
         $bpProjects = array_reverse($bpProjects);
     }
     wp_enqueue_script( 'sortable', get_template_directory_uri() . '/js/sorttable.js', array(), null, false );
