@@ -16,8 +16,13 @@ class ffapi {
     }
 
 	function __construct( $summarizedApiUrl ) {
-		$this->summarizedApiUrl = $summarizedApiUrl;
-		$rawFile = file_get_contents($this->getSummarizedApiUrl());
+        $ctx = stream_context_create(array('http'=>
+            array(
+                'timeout' => get_option('http_timeout'), // 1 200 Seconds = 20 Minutes
+            )
+        ));
+        $this->summarizedApiUrl = $summarizedApiUrl;
+		$rawFile = file_get_contents($this->getSummarizedApiUrl(), null, $ctx);
 		$json = json_decode($rawFile, true);
 		$this->summarizedApi = $json;
 	}

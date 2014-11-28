@@ -3,9 +3,9 @@
   Plugin Name: Betterplace Projects Table
   Plugin URI: https://github.com/freifunk/www.freifunk.net
   Description: creates a table of given betterplace donation projects
-  Version: 1.0.0
+  Version: 1.3.1
   Author: Andreas Bräu
-  Author URI: http://andi95.de
+  Author URI: http://blog.andi95.de
   License: GPLv2 or later
   License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
@@ -21,51 +21,54 @@ function betterplaceprojecttable($atts) {
     'sort' => 'desc'
   ), $atts ) ) ;
 
-    $ffapi = new ffapi("http://freifunk.net/map/ffSummarizedDir.json");
+    $ffapi = new ffapi(get_option('ffapi_summarized_dir'));
     $df = new DonationFactory();
-    $communityCampaigns = $ffapi->getValues("support.donations.campaigns");
-    $donationProjects = array();
+    $campaigns = $ffapi->getValues("support.donations.campaigns");
+    $bpProjects = array();
 
-    $communityCampaigns = array_unique($communityCampaigns, SORT_REGULAR);
-    foreach($communityCampaigns as $communityName => $projectsPerCommunity) {
-        foreach ($projectsPerCommunity as $singleCommunityProject) {
-            $donationProject = $df->getDonationClass($singleCommunityProject['provider'], $singleCommunityProject['projectid'], $communityName);
-            array_push($donationProjects, $donationProject->getProjectArray());
+    $campaigns = array_unique($campaigns, SORT_REGULAR);
+    foreach($campaigns as $name => $projects) {
+        foreach ($projects as $project) {
+            if ( false === ( $bp = get_transient( $project['provider'].$project['projectid'] ) ) ) {
+                $bp = $df->getDonationClass($project['provider'], $project['projectid'], $name);
+                set_transient( $project['provider'].$project['projectid'], $bp, get_option('cache_timeout') );
+            }
+            array_push($bpProjects, $bp->getProjectArray());
         }
     }
 
 
-    usort($donationProjects, function($a, $b) use ($orderBy) {
+    usort($bpProjects, function($a, $b) use ($orderBy) {
         return $a[$orderBy] - $b[$orderBy];
     });
     if ($sort == "desc") {
-        $donationProjects = array_reverse($donationProjects);
+        $bpProjects = array_reverse($bpProjects);
     }
+    wp_enqueue_script( 'sortable', get_template_directory_uri() . '/js/sorttable.js', array(), null, false );
 
 
     ?>
 <div class="betterplace-table">
-<table>
+<table class="sortable betterplace-table">
 <thead>
-  <th>Projekt</th>
-  <th>Offener Betrag</th>
-  <th>Bedarfe</th>
-  <th>Fortschritt</th>
-  <th>Spendenlink</th>
+  <th <?php if ($orderBy == "projectTitle") {echo "class='sorttable_sorted'";}?>>Projekt/Träger<?php if ($orderBy == "projectTitle") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
+  <th class="sorttable_numeric<?php if ($orderBy == "openAmount") {echo " sorttable_sorted";}?>">Offener Betrag <?php if ($orderBy == "openAmount") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
+  <th class="sorttable_numeric<?php if ($orderBy == "incompleteNeed") {echo " sorttable_sorted";}?>">Bedarfe<?php if ($orderBy == "incompleteNeed") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
+  <th class="sorttable_numeric<?php if ($orderBy == "donors") {echo " sorttable_sorted";}?>">Spender<?php if ($orderBy == "donors") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
+  <th class="sorttable_numeric<?php if ($orderBy == "progress") {echo " sorttable_sorted";}?>">Fortschritt<?php if ($orderBy == "progress") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
+  <th class="sorttable_nosort">Spendenlink</th>
 </thead>
 
 <?php
-  foreach($donationProjects as $singleProject) {
+  foreach($bpProjects as $bpProject) {
     echo "<tr>";
-    echo "<td>";
-    echo "<a href=\"#". $singleProject['key'] ."\">";
-    echo "<img src=\"" . $singleProject['projectImage'] . "\" title=\"" . $singleProject['projectTitle'] . "\" height=\"50px\" />";
-    echo "</a>";
-    echo "</td>";
-    echo "<td>" . $singleProject['openAmount']/100 ." €</td>";
-    echo "<td>" . $singleProject['incompleteNeed'] . "</td>";
-    echo "<td>" . do_shortcode("[wppb progress=" . $singleProject['progress']. " fullwidth=false option=flat location=inside color=#dc0067]") . "</td>";
-      echo "<td><a href=\"". $singleProject['projectLink']  ."\" target=\"_blank\">". $singleProject['projectTitle'] . "</a></td>";
+    echo "<td>".$bpProject['projectTitle']."<br/>";
+    echo "<a href=\"#". $bpProject['organization'] ."\">" . $bpProject['organization'] . "</a></td>";
+    echo "<td>" . round($bpProject['openAmount']/100) ." €</td>";
+    echo "<td>" . $bpProject['incompleteNeed'] . "</td>";
+    echo "<td>" . $bpProject['donors'] . "</td>";
+    echo "<td sorttable_customkey='".$bpProject['progress']."'>" . do_shortcode("[wppb progress=" . $bpProject['progress']. " fullwidth=false option=flat location=inside color=#dc0067]") . "</td>";
+      echo "<td><a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\">direkt spenden...</a></td>";
     echo "</tr>";
   }
 ?>
@@ -73,6 +76,10 @@ function betterplaceprojecttable($atts) {
 </div>
 <?php
 }
+
+add_option('ffapi_summarized_dir', "http://freifunk.net/map/ffSummarizedDir.json");
+add_option('http_timeout', 2);
+add_option('cache_timeout', 1 * HOUR_IN_SECONDS);
 
 add_shortcode("bpprojecttable", "betterplaceprojecttable");
 ?>

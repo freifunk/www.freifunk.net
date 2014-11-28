@@ -13,7 +13,12 @@ class bpProject extends DonationCampaigns {
     const bpApiUrl = "https://api.betterplace.org/de/api_v4/projects/";
 
     public function getProjectDetails() {
-        $prjDetails = file_get_contents(self::bpApiUrl . $this->getCampaignId() . ".json");
+        $ctx = stream_context_create(array('http'=>
+            array(
+                'timeout' => get_option('http_timeout'), // 1 200 Seconds = 20 Minutes
+            )
+        ));
+        $prjDetails = file_get_contents(self::bpApiUrl . $this->getCampaignId() . ".json", null, $ctx);
         $prjDetailsJson = json_decode($prjDetails, true);
         foreach($prjDetailsJson['links'] as $links) {
             if ($links['rel'] == 'platform') {
@@ -33,6 +38,7 @@ class bpProject extends DonationCampaigns {
         $this->setIncompleteNeed($prjDetailsJson['incomplete_need_count']);
         $this->setProgress($prjDetailsJson['progress_percentage']);
         $this->setDonors($prjDetailsJson['donor_count']);
+        $this->setOrganization($prjDetailsJson['carrier']['name']);
         return $this;
     }
 
