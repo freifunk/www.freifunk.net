@@ -64,7 +64,7 @@ function betterplaceprojecttable($atts) {
   <th class="sorttable_numeric<?php if ($orderBy == "completedNeed") {echo " sorttable_sorted";}?>">Erfüllt<?php if ($orderBy == "completedNeed") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
   <th class="sorttable_numeric<?php if ($orderBy == "donors") {echo " sorttable_sorted";}?>">Spender<?php if ($orderBy == "donors") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
   <th class="sorttable_numeric<?php if ($orderBy == "progress") {echo " sorttable_sorted";}?>">Fortschritt<?php if ($orderBy == "progress") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
-  <th class="sorttable_nosort">Spenden</th>
+  <th class="sorttable_numeric<?php if ($orderBy == "openAmount") {echo " sorttable_sorted";}?>">Spenden<?php if ($orderBy == "openAmount") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
 </thead>
 
 <?php
@@ -76,7 +76,7 @@ function betterplaceprojecttable($atts) {
     echo "<td>" . $bpProject['completedNeed'] . "</td>";
     echo "<td>" . $bpProject['donors'] . "</td>";
     echo "<td sorttable_customkey='".$bpProject['progress']."'>" . do_shortcode("[wppb progress=" . $bpProject['progress']. " fullwidth=false option=flat location=inside color=#009ee0]") . "</td>";
-      echo "<td>Es fehlen noch ".round($bpProject['openAmount']/100). " €<a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\"><button>Jetzt spenden!</button></a></td>";
+    echo "<td sorttable_customkey='".$bpProject['openAmount']."'>Es fehlen noch ".round($bpProject['openAmount']/100). " €<a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\"><button>Jetzt spenden!</button></a></td>";
     echo "</tr>";
   }
 ?>
