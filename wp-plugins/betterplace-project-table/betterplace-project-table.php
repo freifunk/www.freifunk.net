@@ -52,11 +52,11 @@ function betterplaceprojecttable($atts) {
 <table class="sortable betterplace-table">
 <thead>
   <th <?php if ($orderBy == "projectTitle") {echo "class='sorttable_sorted'";}?>>Projekt/Träger<?php if ($orderBy == "projectTitle") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
-  <th class="sorttable_numeric<?php if ($orderBy == "openAmount") {echo " sorttable_sorted";}?>">Offener Betrag <?php if ($orderBy == "openAmount") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
-  <th class="sorttable_numeric<?php if ($orderBy == "incompleteNeed") {echo " sorttable_sorted";}?>">Bedarfe<?php if ($orderBy == "incompleteNeed") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
+  <th class="sorttable_numeric<?php if ($orderBy == "incompleteNeed") {echo " sorttable_sorted";}?>">Offene Bedarfe<?php if ($orderBy == "incompleteNeed") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
+  <th class="sorttable_numeric<?php if ($orderBy == "completedNeed") {echo " sorttable_sorted";}?>">Erfüllt<?php if ($orderBy == "completedNeed") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
   <th class="sorttable_numeric<?php if ($orderBy == "donors") {echo " sorttable_sorted";}?>">Spender<?php if ($orderBy == "donors") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
   <th class="sorttable_numeric<?php if ($orderBy == "progress") {echo " sorttable_sorted";}?>">Fortschritt<?php if ($orderBy == "progress") {echo "<span id='sorttable_sortfwdind'>&nbsp;▾</span>";}?></th>
-  <th class="sorttable_nosort">Spendenlink</th>
+  <th class="sorttable_nosort">Spenden</th>
 </thead>
 
 <?php
@@ -64,8 +64,8 @@ function betterplaceprojecttable($atts) {
     echo "<tr>";
     echo "<td>".$bpProject['projectTitle']."<br/>";
     echo "<a href=\"#". $bpProject['organization'] ."\">" . $bpProject['organization'] . "</a></td>";
-    echo "<td>" . round($bpProject['openAmount']/100) ." €</td>";
     echo "<td>" . $bpProject['incompleteNeed'] . "</td>";
+    echo "<td>" . $bpProject['completedNeed'] . "</td>";
     echo "<td>" . $bpProject['donors'] . "</td>";
     echo "<td sorttable_customkey='".$bpProject['progress']."'>" . do_shortcode("[wppb progress=" . $bpProject['progress']. " fullwidth=false option=flat location=inside color=#009ee0]") . "</td>";
       echo "<td>Es fehlen noch ".round($bpProject['openAmount']/100). " €<a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\"><button>Jetzt spenden!</button></a></td>";

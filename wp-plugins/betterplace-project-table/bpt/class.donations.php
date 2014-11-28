@@ -17,6 +17,7 @@ abstract class DonationCampaigns {
     private $openAmount;
     private $organization;
     private $incompleteNeed;
+    private $completedNeed;
     private $progress;
     private $donors;
 
@@ -36,6 +37,7 @@ abstract class DonationCampaigns {
         $return['projectTitle'] = $this->projectTitle;
         $return['openAmount'] = $this->openAmount;
         $return['incompleteNeed'] = $this->incompleteNeed;
+        $return['completedNeed'] = $this->completedNeed;
         $return['progress'] = $this->progress;
         $return['donors'] = $this->donors;
         $return['organization'] = $this->organization;
@@ -43,6 +45,22 @@ abstract class DonationCampaigns {
     }
 
     public abstract function getProjectDetails();
+
+    /**
+     * @return mixed
+     */
+    public function getCompletedNeed()
+    {
+        return $this->completedNeed;
+    }
+
+    /**
+     * @param mixed $completeNeed
+     */
+    public function setCompletedNeed($completedNeed)
+    {
+        $this->completedNeed = $completedNeed;
+    }
 
 
     /**
