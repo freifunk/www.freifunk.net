@@ -67,8 +67,8 @@ function betterplaceprojecttable($atts) {
     echo "<td>" . round($bpProject['openAmount']/100) ." €</td>";
     echo "<td>" . $bpProject['incompleteNeed'] . "</td>";
     echo "<td>" . $bpProject['donors'] . "</td>";
-    echo "<td sorttable_customkey='".$bpProject['progress']."'>" . do_shortcode("[wppb progress=" . $bpProject['progress']. " fullwidth=false option=flat location=inside color=#dc0067]") . "</td>";
-      echo "<td><a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\">direkt spenden...</a></td>";
+    echo "<td sorttable_customkey='".$bpProject['progress']."'>" . do_shortcode("[wppb progress=" . $bpProject['progress']. " fullwidth=false option=flat location=inside color=#009ee0]") . "</td>";
+      echo "<td>Es fehlen noch ".round($bpProject['openAmount']/100). " €<a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\"><button>Jetzt spenden!</button></a></td>";
     echo "</tr>";
   }
 ?>
