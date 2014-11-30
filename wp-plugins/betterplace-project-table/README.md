@@ -20,10 +20,12 @@ Changes
 -------
 1.3.1
 * make tables sortable
+
 1.3.0
 * use transient "cache"
 * set timeout for network requests, cache and url
 * open amount rounded
 * table is sortable
+
 1.2.0
 * optimized output table
