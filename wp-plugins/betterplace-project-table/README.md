@@ -18,6 +18,9 @@ Options are:
 
 Changes
 -------
+1.3.3
+* Output will be returned as string
+
 1.3.1
 * make tables sortable
 
