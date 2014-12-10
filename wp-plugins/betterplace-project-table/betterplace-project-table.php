@@ -22,6 +22,7 @@ function betterplaceprojecttable($atts) {
         'orderBy' => 'openAmount',
         'sort' => 'desc',
         'use_ffapi' => 'true',
+        'show_provider' => 'true',
         'more_campaigns' => null
     ), $atts ) ) ;
 
@@ -65,7 +66,9 @@ function betterplaceprojecttable($atts) {
     $output .= "<div class=\"betterplace-table\">";
     $output .= "<table class=\"sortable betterplace-table\">";
     $output .= "<thead>";
-    $output .= "<th class=\"" . getSortedClass($orderBy, "projectTitle") ."\">Projekt/Träger" . getSortSign($orderBy, "projectTitle") ."</th>";
+    $output .= "<th class=\"" . getSortedClass($orderBy, "projectTitle") ."\">Projekt";
+    if ( $show_provider === 'true') $output .= "/Träger";
+    $output .= getSortSign($orderBy, "projectTitle") ."</th>";
     $output .= "<th class=\"sorttable_numeric " . getSortedClass($orderBy, "incompleteNeed") . "\">Bedarfe" . getSortSign($orderBy, "incompleteNeed") ." </th>";
     $output .= "<th class=\"sorttable_numeric " . getSortedClass($orderBy, "completedNeed") . "\">Erfüllt" . getSortSign($orderBy, "completedNeed") ." </th>";
     $output .= "<th class=\"sorttable_numeric " . getSortedClass($orderBy, "donors") . "\">Spender" . getSortSign($orderBy, "donors") ." </th>";
@@ -76,7 +79,7 @@ function betterplaceprojecttable($atts) {
   foreach($bpProjects as $bpProject) {
     $output .= "<tr>";
     $output .= "<td class=\"organization\">".$bpProject['projectTitle']."<br/>";
-    $output .= "<a href=\"#". $bpProject['organization'] ."\">" . $bpProject['organization'] . "</a></td>";
+    if ( $show_provider === 'true') $output .= "<a href=\"#". $bpProject['organization'] ."\">" . $bpProject['organization'] . "</a></td>";
     $output .= "<td class=\"numeric\">" . $bpProject['incompleteNeed'] . "</td>";
     $output .= "<td class=\"numeric\">" . $bpProject['completedNeed'] . "</td>";
     $output .= "<td class=\"numeric\">" . $bpProject['donors'] . "</td>";
