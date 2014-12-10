@@ -18,6 +18,11 @@ Options are:
 
 Changes
 -------
+1.3.5
+* Bug fixes
+* allow to hide project provider
+* clean way to use shortcode attributes
+
 1.3.4
 * add switch to enable or disable use of freifunk api
 

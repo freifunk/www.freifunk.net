@@ -3,7 +3,7 @@
   Plugin Name: Betterplace Projects Table
   Plugin URI: https://github.com/freifunk/www.freifunk.net
   Description: creates a table of given betterplace donation projects
-  Version: 1.3.4
+  Version: 1.3.5
   Author: Andreas Bräu
   Author URI: http://blog.andi95.de
   License: GPLv2 or later
@@ -16,15 +16,20 @@ include_once("bpt/class.bpproject.php");
 
 
 function betterplaceprojecttable($atts) {
-    $orderBy = '';
     $use_ffapi = null;
-    extract(shortcode_atts( array(
+    $a = shortcode_atts( array(
         'orderBy' => 'openAmount',
         'sort' => 'desc',
         'use_ffapi' => 'true',
         'show_provider' => 'true',
         'more_campaigns' => null
-    ), $atts ) ) ;
+    ), $atts ) ;
+
+    $orderBy = $a['orderBy'];
+    $sort = $a['sort'];
+    $use_ffapi = $a['use_ffapi'];
+    $show_provider = $a['show_provider'];
+    $more_campaigns = $a['more_campaigns'];
 
     $campaigns = array();
 
