@@ -18,7 +18,6 @@ include_once("bpt/class.bpproject.php");
 function betterplaceprojecttable($atts) {
     $orderBy = '';
     $use_ffapi = null;
-    $ffapi = new ffapi();
     extract(shortcode_atts( array(
         'orderBy' => 'openAmount',
         'sort' => 'desc',
@@ -26,10 +25,12 @@ function betterplaceprojecttable($atts) {
         'more_campaigns' => null
     ), $atts ) ) ;
 
+    $campaigns = array();
+
     if ($use_ffapi === 'true') {
         $ffapi = new ffapi(get_option('ffapi_summarized_dir'));
+        $campaigns = $ffapi->getValues("support.donations.campaigns");
     }
-    $campaigns = $ffapi->getValues("support.donations.campaigns");
     $df = new DonationFactory();
     $bpProjects = array();
     $output = "";
