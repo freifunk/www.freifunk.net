@@ -10,32 +10,40 @@
 
 function tci_add_calendar($feed, $name) {
 	global $wpdb;
-	$result = $wpdb->query(
-		$wpdb->prepare(
-			"INSERT IGNORE INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %s)", $name, $name, '0'
-		)
-	);
-	if ( $result === false ) {
-		return "error";
-	}
-	$result = $wpdb->query(
-		$wpdb->prepare(
-			"INSERT IGNORE INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) select distinct a.term_id, 'events_categories', '', b.term_id, '0' from $wpdb->terms a join $wpdb->terms b on b.slug='community-events' where a.name=%s and a.slug=%s", $name, $name
-		)
-	);
-	if ( $result === false ) {
-		return "error";
-	}
-	$result = $wpdb->query(
-		$wpdb->prepare(
-			"INSERT IGNORE INTO " . $wpdb->prefix ."ai1ec_event_category_meta (term_id, term_color) select distinct term_id, '' from $wpdb->terms where name=%s and slug=%s", $name, $name
-		)
-	);
-	$term_id = $wpdb->get_var(
-		$wpdb->prepare(
-			"SELECT distinct term_id FROM $wpdb->terms where slug=%s", $name
-		)
-	);
+
+  $term_id = $wpdb->get_var(
+    $wpdb->prepare(
+      "SELECT distinct term_id FROM $wpdb->terms where slug=%s", $name
+    )
+  );
+  if (is_null($term_id)) {
+  	$result = $wpdb->query(
+  		$wpdb->prepare(
+  			"INSERT IGNORE INTO $wpdb->terms (name, slug, term_group) VALUES (%s, %s, %s)", $name, $name, '0'
+  		)
+  	);
+  	if ( $result === false ) {
+  		return "error";
+  	}
+  	$result = $wpdb->query(
+  		$wpdb->prepare(
+  			"INSERT IGNORE INTO $wpdb->term_taxonomy (term_id, taxonomy, description, parent, count) select distinct a.term_id, 'events_categories', '', b.term_id, '0' from $wpdb->terms a join $wpdb->terms b on b.slug='community-events' where a.name=%s and a.slug=%s", $name, $name
+  		)
+  	);
+  	if ( $result === false ) {
+  		return "error";
+  	}
+  	$result = $wpdb->query(
+  		$wpdb->prepare(
+  			"INSERT IGNORE INTO " . $wpdb->prefix ."ai1ec_event_category_meta (term_id, term_color) select distinct term_id, '' from $wpdb->terms where name=%s and slug=%s", $name, $name
+  		)
+  	);
+  	$term_id = $wpdb->get_var(
+  		$wpdb->prepare(
+  			"SELECT distinct term_id FROM $wpdb->terms where slug=%s", $name
+  		)
+  	);
+  }
 	$result = $wpdb->query(
 		$wpdb->prepare(
 			"REPLACE INTO " . $wpdb->prefix . "ai1ec_event_feeds (feed_url, feed_category, feed_tags, comments_enabled, map_display_enabled, keep_tags_categories) VALUES (%s, %s, %s, '0', '0', '0')", $feed['url'], $term_id, $feed['communityname']
