@@ -86,11 +86,21 @@ function betterplaceprojecttable($atts) {
     $output .= "<td class=\"organization\">".$bpProject['projectTitle'];
     if ( $show_provider === 'true' && ! empty($bpProject['organization'])) $output .= "<br/><a href=\"#". $bpProject['organization'] ."\">" . $bpProject['organization'] . "</a>";
     $output .= "</td>";
-    $output .= "<td class=\"numeric\">" . $bpProject['incompleteNeed'] . "</td>";
+    $output .= "<td class=\"numeric\">";
+    if (! empty($bpProject['incompleteNeed'])) $output .=  $bpProject['incompleteNeed'];
+    $output .= "</td>";
     $output .= "<td class=\"numeric\">" . $bpProject['completedNeed'] . "</td>";
     $output .= "<td class=\"numeric\">" . $bpProject['donors'] . "</td>";
-    $output .= "<td class=\"progress\" sorttable_customkey='".$bpProject['progress']."'>" . do_shortcode("[wppb progress=" . $bpProject['progress']. " fullwidth=false option=flat location=inside color=#009ee0]") . "</td>";
-    $output .= "<td class=\"donor\" sorttable_customkey='".$bpProject['openAmount']."'>Es fehlen noch ".round($bpProject['openAmount']/100). " €<a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\"><button>Jetzt spenden!</button></a></td>";
+    if (empty($bpProject['progress'])) {
+        $output .= "<td></td>";
+    }  else {
+        $output .= "<td class=\"progress\" sorttable_customkey='" . $bpProject['progress'] . "'>" . do_shortcode("[wppb progress=" . $bpProject['progress'] . " fullwidth=false option=flat location=inside color=#009ee0]") . "</td>";
+    }
+    if (empty($bpProject['openAmount'])) {
+        $output .= "<td class=\"donor\" sorttable_customkey='".$bpProject['openAmount']."'><a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\"><button>Jetzt spenden!</button></a></td>";
+    } else {
+        $output .= "<td class=\"donor\" sorttable_customkey='" . $bpProject['openAmount'] . "'>Es fehlen noch " . round($bpProject['openAmount'] / 100) . " €<a href=\"" . $bpProject['projectLink'] . "\" target=\"_blank\"><button>Jetzt spenden!</button></a></td>";
+    }
     $output .= "</tr>";
   }
 
