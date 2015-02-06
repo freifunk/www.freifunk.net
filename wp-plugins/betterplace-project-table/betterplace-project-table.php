@@ -83,8 +83,9 @@ function betterplaceprojecttable($atts) {
 
   foreach($bpProjects as $bpProject) {
     $output .= "<tr>";
-    $output .= "<td class=\"organization\">".$bpProject['projectTitle']."<br/>";
-    if ( $show_provider === 'true') $output .= "<a href=\"#". $bpProject['organization'] ."\">" . $bpProject['organization'] . "</a></td>";
+    $output .= "<td class=\"organization\">".$bpProject['projectTitle'];
+    if ( $show_provider === 'true' && ! empty($bpProject['organization'])) $output .= "<br/><a href=\"#". $bpProject['organization'] ."\">" . $bpProject['organization'] . "</a>";
+    $output .= "</td>";
     $output .= "<td class=\"numeric\">" . $bpProject['incompleteNeed'] . "</td>";
     $output .= "<td class=\"numeric\">" . $bpProject['completedNeed'] . "</td>";
     $output .= "<td class=\"numeric\">" . $bpProject['donors'] . "</td>";
