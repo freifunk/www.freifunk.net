@@ -13,6 +13,9 @@ final class DonationFactory {
             case "betterplace":
                 return new bpProject($campaignId, $key);
                 break;
+            case "boost":
+                return new boostCampaign($campaignId, $key);
+                break;
             default:
                 return null;
         }
