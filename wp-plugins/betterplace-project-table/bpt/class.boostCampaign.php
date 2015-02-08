@@ -6,7 +6,9 @@
  * Time: 13:17
  */
 
-class boostCampaign extends DonationCampaigns{
+include_once("class.donations.php");
+
+class boostCampaign extends DonationCampaigns {
 
     const boostCampaignUrl = "https://www.boost-project.com/de/charities/";
 
@@ -22,9 +24,17 @@ class boostCampaign extends DonationCampaigns{
 
         $this->setProjectLink(self::boostCampaignUrl . $this->getCampaignId());
         $this->setDonationLink(self::boostCampaignUrl . $this->getCampaignId() . "##");
+        $this->setProjectImage("");
 
         $this->setProjectTitle($prjDetailsJson['title']);
         $this->setDonors($prjDetailsJson['advocates']);
+        $this->setOpenAmount("");
+        $this->setTotalAmount($prjDetailsJson['income']*100);
+        $this->setIncompleteNeed("");
+        $this->setCompletedNeed("");
+        $this->setProgress("");
+        $this->setOrganization("");
+
         return $this;
     }
 

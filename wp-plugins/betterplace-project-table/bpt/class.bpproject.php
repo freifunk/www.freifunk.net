@@ -35,6 +35,7 @@ class bpProject extends DonationCampaigns {
 
         $this->setProjectTitle($prjDetailsJson['title']);
         $this->setOpenAmount($prjDetailsJson['open_amount_in_cents']);
+        $this->setTotalAmount("");
         $this->setIncompleteNeed($prjDetailsJson['incomplete_need_count']);
         $this->setCompletedNeed($prjDetailsJson['completed_need_count']);
         $this->setProgress($prjDetailsJson['progress_percentage']);
