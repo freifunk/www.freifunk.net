@@ -55,7 +55,9 @@ function betterplaceprojecttable($atts) {
                 $bp = $df->getDonationClass($project['provider'], $project['projectid'], $name);
                 set_transient( $project['provider'].$project['projectid'], $bp, get_option('cache_timeout') );
             }
-            array_push($bpProjects, $bp->getProjectArray());
+            if (is_object($bp)) {
+                array_push($bpProjects, $bp->getProjectArray());
+            }
         }
     }
 
@@ -74,7 +76,7 @@ function betterplaceprojecttable($atts) {
     $output .= "<th class=\"" . getSortedClass($orderBy, "projectTitle") ."\">Projekt";
     if ( $show_provider === 'true') $output .= "/Träger";
     $output .= getSortSign($orderBy, "projectTitle") ."</th>";
-    $output .= "<th class=\"sorttable_numeric " . getSortedClass($orderBy, "incompleteNeed") . "\">Bedarfe" . getSortSign($orderBy, "incompleteNeed") ." </th>";
+    $output .= "<th class=\"sorttable_numeric " . getSortedClass($orderBy, "incompleteNeed") . "\">".__('Bedarfe', 'bpt') . getSortSign($orderBy, "incompleteNeed") ." </th>";
     $output .= "<th class=\"sorttable_numeric " . getSortedClass($orderBy, "completedNeed") . "\">Erfüllt" . getSortSign($orderBy, "completedNeed") ." </th>";
     $output .= "<th class=\"sorttable_numeric " . getSortedClass($orderBy, "donors") . "\">Spender" . getSortSign($orderBy, "donors") ." </th>";
     $output .= "<th class=\"sorttable_numeric " . getSortedClass($orderBy, "progress") . "\">Fortschritt" . getSortSign($orderBy, "progress") ." </th>";
@@ -96,8 +98,8 @@ function betterplaceprojecttable($atts) {
     }  else {
         $output .= "<td class=\"progress\" sorttable_customkey='" . $bpProject['progress'] . "'>" . do_shortcode("[wppb progress=" . $bpProject['progress'] . " fullwidth=false option=flat location=inside color=#009ee0]") . "</td>";
     }
-    if (empty($bpProject['openAmount'])) {
-        $output .= "<td class=\"donor\" sorttable_customkey='".$bpProject['openAmount']."'><a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\"><button>Jetzt spenden!</button></a></td>";
+    if (empty($bpProject['openAmount']) && ! empty($bpProject['totalAmount'])) {
+        $output .= "<td class=\"donor\" sorttable_customkey='0'>Schon " . round($bpProject['totalAmount'] / 100) . " € sind da<a href=\"". $bpProject['projectLink']  ."\" target=\"_blank\"><button>Jetzt spenden!</button></a></td>";
     } else {
         $output .= "<td class=\"donor\" sorttable_customkey='" . $bpProject['openAmount'] . "'>Es fehlen noch " . round($bpProject['openAmount'] / 100) . " €<a href=\"" . $bpProject['projectLink'] . "\" target=\"_blank\"><button>Jetzt spenden!</button></a></td>";
     }

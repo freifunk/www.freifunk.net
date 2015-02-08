@@ -6,6 +6,8 @@
  * Time: 23:54
  */
 
+include_once("class.boostCampaign.php");
+
 final class DonationFactory {
 
     public function getDonationClass($platform, $campaignId, $key){
