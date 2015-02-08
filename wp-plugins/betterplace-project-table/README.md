@@ -4,7 +4,7 @@ Contributors: andibraeu
 Donate link: http://www.weimarnetz.de/spenden
 Tags: betterplace,donations 
 Requires at least: 3.6
-Tested up to: 3.6
+Tested up to: 4.1
 Stable tag: trunk
 
 Description
@@ -15,9 +15,17 @@ Requires the Progress Bar Plugin
 Options are:
 * orderBy: to order the output by one of the following fields: key, openAmount, incompleteNeed, progress, donors
 * sort: whether to order ascending (asc) oder descending (desc)
+* use_ffapi: enable or disable use of ffapi
+* more_campaign: add betterplace campaign-ids
 
 Changes
 -------
+1.4.0
+* add boost campaigns that can be provided via freifunk API
+* Bug fixes
+ * don't crash when there's an unknown campaign provider
+ * avoid duplicate campaign entries
+
 1.3.5
 * Bug fixes
 * allow to hide project provider
