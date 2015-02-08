@@ -38,8 +38,14 @@ class ffapi {
         $result = array();
         foreach($this->summarizedApi as $name => $community) {
             $values = $this->getValuesFromCommunity($community, $path);
-            if ( ! empty($values)) {
+            if ( ! empty($values) && count($values) == 1 ) {
                 $result[$name] = $values;
+            } elseif (! empty($values) && count($values) > 1) {
+                $valueCounter = 1;
+                foreach($values as $singleValue) {
+                    $result[$name.$valueCounter] = $singleValue;
+                    $valueCounter++;
+                }
             }
         }
         return $result;
