@@ -13,6 +13,7 @@ This plugin provides betterplace and boost projects as a html table. You can use
 Requires the Progress Bar Plugin
 
 Options are:
+
 * orderBy: to order the output by one of the following fields: key, openAmount, incompleteNeed, progress, donors
 * sort: whether to order ascending (asc) oder descending (desc)
 * use_ffapi: enable or disable use of Freifunk API (http://api.freifunk.net)
