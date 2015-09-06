@@ -30,7 +30,7 @@ mkdir($rsscachelocation, 0777);
 if ($rssfeed != 'no feed') { 
 
 $rssformatsplit = str_split(html_entity_decode($rssformat));
-$rssformatdef = array('p','w','x','y','Y','z','a');
+$rssformatdef = array('p','w','W','x','y','Y','z','a');
 $rssfeedarray = explode(",",$rssfeed);
 foreach ($rssfeedarray as &$feedurl) {
 $feedurl = trim($feedurl);
@@ -61,6 +61,12 @@ $source = ($rss_items[$i]->get_item_tags(SIMPLEPIE_NAMESPACE_RSS_20, 'source'));
 $w = $source[0]['data'];
 if ($w == '') {
 $w = $rss_items[$i]->get_feed()->get_title();
+}
+$sourceUrl = $source[0]['attribs']['']['url'];
+if ($sourceUrl <> '') {
+  $W = '<a href="' . $sourceUrl . '" target="_blank">'. $w . '</a>';
+} else {
+  $W = '<a href="' . $rss_items[$i]->get_feed()->get_link() . '" target="_blank">'. $w . '</a>';
 }
 if ($rss_items[$i]->get_date()) $x = $rss_items[$i]->get_date($rssdateformat);
 $rsslinketitle = $rsstitle;
@@ -94,7 +100,7 @@ $rssformatoutput = $rssformatoutput.$v;
 }
 
 $rssreturn = $rssreturn.'<li>'.$rssformatoutput.'</li>';
-unset($rssformatoutput, $p, $w, $x, $Y, $y, $z, $a);
+unset($rssformatoutput, $p, $w, $W, $x, $Y, $y, $z, $a);
 $i++;
 }	
 if (!empty($rsscss)) { $rssipul = '<ul class="'.$rsscss.'">'; } else { $rssipul = '<ul>'; }
