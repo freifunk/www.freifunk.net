@@ -3,7 +3,7 @@ Contributors: titusbicknell
 Donate link: http://www.titusbicknell.com/wordpress/rss-in-page
 Tags: pages, posts, rss
 Requires at least: 2.5
-Tested up to: 3.6
+Tested up to: 4.3 
 Stable tag: trunk
 
 == Description ==
