@@ -6,107 +6,107 @@ Description: short code [rssinpage rssfeed='feedURL'] generates a list of RSS fe
 Version: 2.9.2f	
 Author: Titus Bicknell, Andreas Braeu
 Author URI: http://titusbicknell.com
-*/
+ */
 
 function rssinpage($atts) {
-extract(shortcode_atts( array(
-'rssfeed' => 'no feed',
-'rssitems' => '5',
-'rssorder' => 'desc',
-'rssdateformat' => 'r',
-'rsstarget' => '_self',
-'rssdescription' => 'yes',
-'rssdescriptionlength' => 'all',
-'rsstitlelength' => 'all',
-'rssformat' => 'x: Y - w<br />z<br /> a<br />',
-'rsscss' => '',
-'rsstimezone' => 'UTC',
-'rssdescriptionreadmore' => 'read more'
-    ), $atts ) );
-$rsscachelocation = WP_CONTENT_DIR.'/cache'; 
-if (!file_exists($rsscachelocation)) {
-mkdir($rsscachelocation, 0777);
-}
-if ($rssfeed != 'no feed') { 
+  extract(shortcode_atts( array(
+    'rssfeed' => 'no feed',
+    'rssitems' => '5',
+    'rssorder' => 'desc',
+    'rssdateformat' => 'r',
+    'rsstarget' => '_self',
+    'rssdescription' => 'yes',
+    'rssdescriptionlength' => 'all',
+    'rsstitlelength' => 'all',
+    'rssformat' => 'x: Y - w<br />z<br /> a<br />',
+    'rsscss' => '',
+    'rsstimezone' => 'UTC',
+    'rssdescriptionreadmore' => 'read more'
+  ), $atts ) );
+  $rsscachelocation = WP_CONTENT_DIR.'/cache'; 
+  if (!file_exists($rsscachelocation)) {
+    mkdir($rsscachelocation, 0777);
+  }
+  if ($rssfeed != 'no feed') { 
 
-$rssformatsplit = str_split(html_entity_decode($rssformat));
-$rssformatdef = array('p','w','W','x','y','Y','z','a');
-$rssfeedarray = explode(",",$rssfeed);
-foreach ($rssfeedarray as &$feedurl) {
-$feedurl = trim($feedurl);
-$rss_urlcheck = stripos($feedurl, 'http');
-if ($rss_urlcheck !== 0) { $feedurl = 'http://'.$feedurl; }
-$feedurl = (html_entity_decode ($feedurl)); 
-}
+    $rssformatsplit = str_split(html_entity_decode($rssformat));
+    $rssformatdef = array('p','w','W','x','y','Y','z','a');
+    $rssfeedarray = explode(",",$rssfeed);
+    foreach ($rssfeedarray as &$feedurl) {
+      $feedurl = trim($feedurl);
+      $rss_urlcheck = stripos($feedurl, 'http');
+      if ($rss_urlcheck !== 0) { $feedurl = 'http://'.$feedurl; }
+      $feedurl = (html_entity_decode ($feedurl)); 
+    }
 
-require_once (ABSPATH . WPINC . '/class-feed.php');
-date_default_timezone_set($rsstimezone);
-$feed = new SimplePie();
-$feed->set_feed_url($rssfeedarray);
-$feed->set_cache_location($rsscachelocation);
-$feed->set_cache_duration('60');
-if ($rssorder == 'none') { $feed->enable_order_by_date(false); }
-$feed->init();
-$feed->handle_content_type();
-$rss = $feed;
-$maxitems = $rss->get_item_quantity(50);
-if ($maxitems != 0) {
-$rss_items = $rss->get_items(0, $maxitems);
-if ($rssitems > $maxitems) $rssitems = $maxitems;
-if ($rssorder == 'asc') $rss_items = array_reverse($rss_items);
-$i=0;
-while ($i < $rssitems) {
-$rsstitle = $rss_items[$i]->get_title();
-$source = ($rss_items[$i]->get_item_tags(SIMPLEPIE_NAMESPACE_RSS_20, 'source'));
-$w = $source[0]['data'];
-if ($w == '') {
-$w = $rss_items[$i]->get_feed()->get_title();
-}
-$sourceUrl = $source[0]['attribs']['']['url'];
-if ($sourceUrl <> '') {
-  $W = '<a href="' . $sourceUrl . '" target="_blank">'. $w . '</a>';
-} else {
-  $W = '<a href="' . $rss_items[$i]->get_feed()->get_link() . '" target="_blank">'. $w . '</a>';
-}
-if ($rss_items[$i]->get_date()) $x = $rss_items[$i]->get_date($rssdateformat);
-$rsslinketitle = $rsstitle;
-if ($rsstitlelength != 'all') { 
-if(strlen($rsstitle) > $rsstitlelength) { $rsstitle = substr($rsstitle, 0, $rsstitlelength).'... '; }
-}
-$y = $rsstitle;
+    require_once (ABSPATH . WPINC . '/class-feed.php');
+    date_default_timezone_set($rsstimezone);
+    $feed = new SimplePie();
+    $feed->set_feed_url($rssfeedarray);
+    $feed->set_cache_location($rsscachelocation);
+    $feed->set_cache_duration('60');
+    if ($rssorder == 'none') { $feed->enable_order_by_date(false); }
+    $feed->init();
+    $feed->handle_content_type();
+    $rss = $feed;
+    $maxitems = $rss->get_item_quantity(50);
+    if ($maxitems != 0) {
+      $rss_items = $rss->get_items(0, $maxitems);
+      if ($rssitems > $maxitems) $rssitems = $maxitems;
+      if ($rssorder == 'asc') $rss_items = array_reverse($rss_items);
+      $i=0;
+      while ($i < $rssitems) {
+        $rsstitle = $rss_items[$i]->get_title();
+        $source = ($rss_items[$i]->get_item_tags(SIMPLEPIE_NAMESPACE_RSS_20, 'source'));
+        $w = $source[0]['data'];
+        if ($w == '') {
+          $w = $rss_items[$i]->get_feed()->get_title();
+        }
+        $sourceUrl = $source[0]['attribs']['']['url'];
+        if ($sourceUrl <> '') {
+          $W = '<a href="' . $sourceUrl . '" target="_blank">'. $w . '</a>';
+        } else {
+          $W = '<a href="' . $rss_items[$i]->get_feed()->get_link() . '" target="_blank">'. $w . '</a>';
+        }
+        if ($rss_items[$i]->get_date()) $x = $rss_items[$i]->get_date($rssdateformat);
+        $rsslinketitle = $rsstitle;
+        if ($rsstitlelength != 'all') { 
+          if(strlen($rsstitle) > $rsstitlelength) { $rsstitle = substr($rsstitle, 0, $rsstitlelength).'... '; }
+        }
+        $y = $rsstitle;
 
-if ($rss_items[$i]->get_permalink() != '') {
-$rss_itemlink = $rss_items[$i]->get_permalink();
-$rss_itemlinkstart = strrpos($rss_itemlink, "http://");
-$rss_itemlink = substr($rss_itemlink, $rss_itemlinkstart);
-$Y = '<a class="test" href="'.$rss_itemlink.'" target="'.$rsstarget.'" title="'.$rsslinketitle.'">'.$rsstitle.'</a>'; } else { $Y = $rsstitle; }
-if ($rss_items[$i]->get_description() != '') $z = $rss_items[$i]->get_description();
-if ($rssdescriptionlength != 'all') { 
-if(strlen($z) > $rssdescriptionlength) { $z = substr($z, 0, $rssdescriptionlength).'... '; }
-if ($rssdescriptionreadmore) { $z .= '<a href="'.$rss_itemlink.'" target="'.$rsstarget.'" title="'.$rsslinketitle.'">'.$rssdescriptionreadmore.'</a>'; }
+        if ($rss_items[$i]->get_permalink() != '') {
+          $rss_itemlink = $rss_items[$i]->get_permalink();
+          $rss_itemlinkstart = strrpos($rss_itemlink, "http://");
+          $rss_itemlink = substr($rss_itemlink, $rss_itemlinkstart);
+          $Y = '<a class="test" href="'.$rss_itemlink.'" target="'.$rsstarget.'" title="'.$rsslinketitle.'">'.$rsstitle.'</a>'; } else { $Y = $rsstitle; }
+          if ($rss_items[$i]->get_description() != '') $z = $rss_items[$i]->get_description();
+        if ($rssdescriptionlength != 'all') { 
+          if(strlen($z) > $rssdescriptionlength) { $z = substr($z, 0, $rssdescriptionlength).'... '; }
+          if ($rssdescriptionreadmore) { $z .= '<a href="'.$rss_itemlink.'" target="'.$rsstarget.'" title="'.$rsslinketitle.'">'.$rssdescriptionreadmore.'</a>'; }
 
-}
-if ($rssdescription == 'no') $z = '';
+        }
+        if ($rssdescription == 'no') $z = '';
 
-if ($enclosure = $rss_items[$i]->get_enclosure()) {
-$p = '<img src="'.$enclosure->get_thumbnail().'" />';
-if (strstr($enclosure->get_type(), 'audio')) {
-$a = do_shortcode( '[podloveaudio src="'.$enclosure->get_link().'" width="80%"]<br />');
-//$a =$enclosure->get_link();
-}
-	}
-foreach ($rssformatsplit as $v) { if (in_array($v, $rssformatdef)) { $v = ${$v}; }
-$rssformatoutput = $rssformatoutput.$v;
-}
+        if ($enclosure = $rss_items[$i]->get_enclosure()) {
+          $p = '<img src="'.$enclosure->get_thumbnail().'" />';
+          if (strstr($enclosure->get_type(), 'audio')) {
+            $a = do_shortcode( '[podloveaudio src="'.$enclosure->get_link().'" width="80%"]<br />');
+            //$a =$enclosure->get_link();
+          }
+        }
+        foreach ($rssformatsplit as $v) { if (in_array($v, $rssformatdef)) { $v = ${$v}; }
+        $rssformatoutput = $rssformatoutput.$v;
+        }
 
-$rssreturn = $rssreturn.'<li>'.$rssformatoutput.'</li>';
-unset($rssformatoutput, $p, $w, $W, $x, $Y, $y, $z, $a);
-$i++;
-}	
-if (!empty($rsscss)) { $rssipul = '<ul class="'.$rsscss.'">'; } else { $rssipul = '<ul>'; }
-return $rssipul.$rssreturn.'</ul>';
-}
-}	
+        $rssreturn = $rssreturn.'<li>'.$rssformatoutput.'</li>';
+        unset($rssformatoutput, $p, $w, $W, $x, $Y, $y, $z, $a);
+        $i++;
+      }	
+      if (!empty($rsscss)) { $rssipul = '<ul class="'.$rsscss.'">'; } else { $rssipul = '<ul>'; }
+      return $rssipul.$rssreturn.'</ul>';
+    }
+  }	
 }
 
 add_shortcode("rssinpage", "rssinpage");
