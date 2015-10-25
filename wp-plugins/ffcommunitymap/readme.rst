@@ -3,12 +3,12 @@ Contributors: andibraeu
 Donate link: http://www.weimarnetz.de/spenden
 Tags: community map 
 Requires at least: 3.6
-Tested up to: 4.2
+Tested up to: 4.3
 Stable tag: trunk
 
 == Description == 
 
-This plugin provides a shortcode to display the well known freifunk community map: [communitymap]
+This plugin provides a shortcode to display the well known freifunk community map: [ffcommunitymap]
 
 It is fully configurable to embed your own sources. These options are available:
 
@@ -44,7 +44,24 @@ It is fully configurable to embed your own sources. These options are available:
 | mapboxid           | "mapbox.streets"                                   | id for your mapbox tiles                                             |
 +--------------------+----------------------------------------------------+----------------------------------------------------------------------+
 
+Another shortcode is for displaying a community table: [ffcommunitytable]
+
+Available options are:
+
++--------------------+-----------------------------------------------------------------+---------------------------------------------------------+
+| Name               | Standard                                                        | Bedeutung                                               |
++--------------------+-----------------------------------------------------------------+---------------------------------------------------------+
+| summaryurl         | "//api.freifunk.net/map/ffApiJsonp.php?mode=summary&callback=?" | URL with API data, we need jsonp there                  |
++--------------------+-----------------------------------------------------------------+---------------------------------------------------------+
+| columns            | "city,name,firmware,routing,nodes,contact"                      | select available columns comma separated                |
++--------------------+-----------------------------------------------------------------+---------------------------------------------------------+
+
+
 == Changelog ==
+
+Version 2.0
+
+* add community table
 
 Version 1.0
 

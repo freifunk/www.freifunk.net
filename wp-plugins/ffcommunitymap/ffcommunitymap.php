@@ -4,11 +4,25 @@
 Plugin Name: Ffcommunitymap
 Plugin URI: http://api.freifunk.net
 Description: display the freifunk community map
-Version: 1.0
+Version: 2.0
 Author: Andi Bräu
 Author URI: https://blog.andi95.de
-License: CC0
-*/
+License: GPL2
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ 
+{Plugin Name} is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, or
+any later version.
+ 
+{Plugin Name} is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+ 
+You should have received a copy of the GNU General Public License
+along with {Plugin Name}. If not, see {License URI}.
+ */
 
 function ffcommunitymap($atts)
 {
@@ -115,6 +129,123 @@ function ffcommunitymap($atts)
 
 }
 
+function ffcommunitytable($atts)
+{
+    $a = shortcode_atts(array(
+      'summaryurl'=> '//api.freifunk.net/map/ffApiJsonp.php?mode=summary&callback=?',
+      'columns' => 'city,name,firmware,routing,nodes,contact'
+    ), $atts);
+
+    $summaryUrl = esc_url($a['summaryurl']);
+    $columns = preg_match("/^[a-z,]*$/", $a['columns']) === 1 ? explode(',', $a['columns']) : explode(',', 'name,city');
+    $scriptid = uniqid("table-data");
+
+    $ffColumns['name']['head'] = '<th title="'.__('Name der Community').'">'.__('Name').'</th>'.PHP_EOL;
+    $ffColumns['name']['js'] = '<td ><% if (item.url) {%>
+                        <a href="<%= item.url%>" target="_blank"><%= item.name %>
+                <% } else { %>
+                           <%= item.name  %>
+                   <%  } %></td>';
+    $ffColumns['city']['head'] = '<th title="'.__('Stadt').'" class="sorttable_sorted">'.__('Stadt/Region').'<span id="sorttable_sortfwdind">&nbsp;▾</span></th>'.PHP_EOL; 
+    $ffColumns['city']['js'] = '<% if (item.location.city) {%>
+                <td><%= item.location.city %>
+                </a><% } else { %>
+                <td>
+                <% } %>
+                </td>';
+    $ffColumns['firmware']['head'] = '<th title="'.__('Benutzte Firmware').'">'.__('Firmware').'</th>'.PHP_EOL; 
+    $ffColumns['firmware']['js'] = '<% if (item.techDetails.firmware && item.techDetails.firmware.name) {%>
+                <td><%= item.techDetails.firmware.name %>
+                <% } else { %>
+                <td>
+                <% } %>
+                </td>';
+    $ffColumns['routing']['head'] = '<th title="'.__('Benutzte Routingprotokolle').'">'.__('Routing').'</th>'.PHP_EOL;
+    $ffColumns['routing']['js'] = '<td><%= item.techDetails.routing %></td>';
+    $ffColumns['nodes']['head'] = '<th title="'.__('Anzahl der Knoten').'" class="sorttable_numeric">'.__('Knoten').'</th>'.PHP_EOL;
+    $ffColumns['nodes']['js'] = '<td><%= item.state.nodes   %></td>';
+    $ffColumns['contact']['head'] = '<th title="'.__('Wie kann man die Community kontaktieren?').'">'.__('Kontakt').'</th>'.PHP_EOL;
+    $ffColumns['contact']['js'] = '<td class=community-popup><ul class="contacts" style="height:<%- Math.round(_.size(item.contact)/6+0.4)*30+10  %>px; width: <%- 6*(30+5)%>px;">
+                <% _.each(item.contact, function(contact, index, list) { %>
+                        <li class="contact">
+                        <a href="<%- contact %>" class="button <%- index %>" target="_window"></a>
+                        </li>
+                        <% }); %>';
+
+    $output = '<div id="communitytabelle">'.PHP_EOL;
+    $output .= '  <table class="table table-striped sortable community-table">'.PHP_EOL;
+    $output .= '  <thead>'.PHP_EOL;
+    $output .= '  <tr>'.PHP_EOL;
+    foreach($columns as $column) {
+      $output .= $ffColumns[$column]['head'];
+    }
+    $output .= '  </tr>'.PHP_EOL;
+    $output .= '  </thead>'.PHP_EOL;
+    $output .= '  <tbody>'.PHP_EOL;
+    $output .= '  </tbody>'.PHP_EOL;
+    $output .= '  </table>'.PHP_EOL;
+    $output .= '</div>'.PHP_EOL;
+    $output .= '<script type="text/template" class="template" id="'.$scriptid.'">'.PHP_EOL;
+
+    $output .= '<% _.each(items,function(item,key,list){ %> })'.PHP_EOL;
+    $output .= '<tr>';
+    foreach($columns as $column) {
+      $output .= $ffColumns[$column]['js'];
+    }
+
+    $output .= '</tr>'.PHP_EOL;
+    $output .= '<% }) %>'.PHP_EOL;
+    $output .= '</script>'.PHP_EOL;
+
+  	$output .= '<script  type="text/javascript">'.PHP_EOL;
+    $output .= '            var tableTemplate = jQuery("script.template#'.$scriptid.'").html();'.PHP_EOL;
+    $output .= '            window.onload = function(){'.PHP_EOL;
+    $output .= '                    var url = "'.$summaryUrl.'";'.PHP_EOL;
+    $output .= '                    jQuery.ajax({'.PHP_EOL;
+		$output .= 'url: url,'.PHP_EOL;
+		$output .= 'dataType: "jsonp",'.PHP_EOL;
+		$output .= 'success: ( function(Response){'.PHP_EOL;
+		$output .= '        var rows = Response;'.PHP_EOL;
+		$output .= '        rows = _.sortBy(rows, function(o){ return o.location.city;});'.PHP_EOL;
+		$output .= '        _.each(rows, function(item, key, list) {'.PHP_EOL;
+		$output .= '                if (item.url && !item.url.match(/^http([s]?):\/\/.*/)) {'.PHP_EOL;
+		$output .= '                        item.url = "http://" + item.url;'.PHP_EOL;
+		$output .= '                }'.PHP_EOL;
+		$output .= '                if (item.contact.ml && !item.contact.ml.match(/^mailto:.*/) && item.contact.ml.match(/.*\@.*/)) {'.PHP_EOL;
+		$output .= '                        item.contact.ml = "mailto:" + item.contact.ml;'.PHP_EOL;
+		$output .= '                } else if (item.contact.ml && !item.contact.ml.match(/^http([s]?):\/\/.*/) ) {'.PHP_EOL;
+		$output .= '                        item.contact.ml = "http://" + item.contact.ml;'.PHP_EOL;
+		$output .= '                }'.PHP_EOL;
+		$output .= '                if (item.contact.email && !item.contact.email.match(/^mailto:.*/)) {'.PHP_EOL;
+		$output .= '                        item.contact.email = "mailto:" + item.contact.email;'.PHP_EOL;
+		$output .= '                }'.PHP_EOL;
+		$output .= '                if (item.contact.twitter && !item.contact.twitter.match(/^http([s]?):\/\/.*/)) {'.PHP_EOL;
+		$output .= '                        item.contact.twitter = "https://twitter.com/" + item.contact.twitter;'.PHP_EOL;
+		$output .= '                }'.PHP_EOL;
+		$output .= '                if (item.contact.irc && !item.contact.irc.match(/^irc:.*/)) {'.PHP_EOL;
+		$output .= '                        item.contact.irc = "irc:" + item.contact.irc;'.PHP_EOL;
+		$output .= '                }'.PHP_EOL;
+		$output .= '                if (item.contact.jabber && !item.contact.jabber.match(/^jabber:.*/)) {'.PHP_EOL;
+		$output .= '                        item.contact.jabber = "xmpp:" + item.contact.jabber;'.PHP_EOL;
+		$output .= '                }'.PHP_EOL;
+		$output .= '                if (item.contact.identica && !item.contact.identica.match(/^identica:.*/)) {'.PHP_EOL;
+		$output .= '                        item.contact.identica = "identica:" + item.contact.identica;'.PHP_EOL;
+		$output .= '                }'.PHP_EOL;
+    $output .= '        });'.PHP_EOL;
+    $output .= '        _.templateSettings.variable = "items";'.PHP_EOL;
+    $output .= '        var templ = _.template(tableTemplate);'.PHP_EOL;
+		$output .= '        jQuery("table.community-table tbody").html(templ(rows));'.PHP_EOL;
+		$output .= '        } ),'.PHP_EOL;
+		$output .= 'error: function(XMLHttpRequest, textStatus, errorThrown){alert("Error");'.PHP_EOL;
+		$output .= '}'.PHP_EOL;
+		$output .= '});'.PHP_EOL;
+		$output .= '};'.PHP_EOL;
+		
+		$output .= '        </script> '.PHP_EOL;
+
+    return $output;
+}
+
 function our_scripts() {
     wp_enqueue_style("cssleaflet", "//api.freifunk.net/map/external/leaflet/leaflet.css");
     wp_enqueue_style("cssleafletmc", "//api.freifunk.net/map/external/leaflet/MarkerCluster.css");
@@ -128,7 +259,8 @@ function our_scripts() {
     wp_enqueue_script("leaflet", "//api.freifunk.net/map/external/leaflet/leaflet.js");
     wp_enqueue_script("leaflet-button-control", "//api.freifunk.net/map/external/leaflet/leaflet-button-control.js");
     wp_enqueue_script("leafletmc", "//api.freifunk.net/map/external/leaflet/leaflet.markercluster.js");
-    wp_enqueue_script("underscore", "//api.freifunk.net/map/external/underscore/underscore.js");
+    wp_enqueue_script("sortable", plugin_dir_url( __FILE__ ). "sorttable.js");
+    wp_enqueue_script("underscore");
     wp_enqueue_script("communitymap", "//api.freifunk.net/map/community_map.js");
     wp_enqueue_script("scrollbar", "//api.freifunk.net/timeline/malihu-scrollbar/jquery.mCustomScrollbar.concat.min.js");
     wp_enqueue_script("timeline", "//api.freifunk.net/timeline/timeline.js");
@@ -137,5 +269,5 @@ function our_scripts() {
 add_action("wp_enqueue_scripts", "our_scripts");
 
 add_shortcode("ffcommunitymap", "ffcommunitymap");
+add_shortcode("ffcommunitytable", "ffcommunitytable");
 
-?>
