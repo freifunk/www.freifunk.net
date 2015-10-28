@@ -24,6 +24,7 @@ You should have received a copy of the GNU General Public License
 along with {Plugin Name}. If not, see {License URI}.
  */
 
+
 function ffcommunitymap($atts)
 {
     $a = shortcode_atts(array(
@@ -44,6 +45,24 @@ function ffcommunitymap($atts)
         'width' => null
     ), $atts);
 
+    wp_enqueue_style("cssleaflet", "//api.freifunk.net/map/external/leaflet/leaflet.css");
+    wp_enqueue_style("cssleafletmc", "//api.freifunk.net/map/external/leaflet/MarkerCluster.css");
+    wp_enqueue_style("cssleafletmcd", "//api.freifunk.net/map/external/leaflet/MarkerCluster.Default.css");
+    wp_enqueue_style("cssleafletbutton", "//api.freifunk.net/map/external/leaflet/leaflet-button-control.css");
+    wp_enqueue_style("cssscrollbar", "//api.freifunk.net/timeline/malihu-scrollbar/jquery.mCustomScrollbar.min.css");
+    wp_enqueue_style("csstimeline", "//api.freifunk.net/timeline/timeline.css");
+    wp_enqueue_style("csstlcustom", "//api.freifunk.net/timeline/custom.css");
+    wp_enqueue_style("csscommunitymap", "//api.freifunk.net/map/community_map.css");
+    wp_enqueue_style("mystyles", plugin_dir_url( __FILE__ ). "ffcommunitymap.css");
+    wp_enqueue_script("underscore");
+    wp_enqueue_script("communitymap", "//api.freifunk.net/map/community_map.js");
+    wp_enqueue_script("leaflet", "//api.freifunk.net/map/external/leaflet/leaflet.js");
+    wp_enqueue_script("leaflet-button-control", "//api.freifunk.net/map/external/leaflet/leaflet-button-control.js");
+    wp_enqueue_script("leafletmc", "//api.freifunk.net/map/external/leaflet/leaflet.markercluster.js");
+    wp_enqueue_script("scrollbar", "//api.freifunk.net/timeline/malihu-scrollbar/jquery.mCustomScrollbar.concat.min.js");
+    wp_enqueue_script("timeline", "//api.freifunk.net/timeline/timeline.js");
+    
+    
     $feedUrl = esc_url($a['feed_url']);
     $geoJsonUrl = esc_url($a['geojsonurl']);
     $mapboxId = esc_html($a['mapboxid']);
@@ -105,7 +124,7 @@ function ffcommunitymap($atts)
     $output .= '</script>'.PHP_EOL;
 
     $output .= '<script>'.PHP_EOL;
-    $output .= 'jQuery.getJSON("'. plugin_dir_url( __FILE__ )  .'config.json", function() {'.PHP_EOL;
+    $output .= 'jQuery(document).ready(function() {'.PHP_EOL;
     $output .= 'var widget = FFCommunityMapWidget({'.PHP_EOL;
     $output .= 'ffGeoJsonUrl: "'.$geoJsonUrl.'",'.PHP_EOL;
     $output .= 'showEvents: '.$showEvents.','.PHP_EOL;
@@ -136,6 +155,12 @@ function ffcommunitytable($atts)
       'columns' => 'city,name,firmware,routing,nodes,contact'
     ), $atts);
 
+    wp_enqueue_script("underscore", $in_footer = false);
+    wp_enqueue_script("footable", plugin_dir_url( __FILE__ ). "footable.js");
+    wp_enqueue_script("footablesort", plugin_dir_url( __FILE__ ). "footable.sort.js");
+    wp_enqueue_script("communitymap", "//api.freifunk.net/map/community_map.js");
+    wp_enqueue_style("mystyles", plugin_dir_url( __FILE__ ). "ffcommunitymap.css");
+    wp_enqueue_style("cssfootablecore", plugin_dir_url( __FILE__ ). "footable.core.css");
     $summaryUrl = esc_url($a['summaryurl']);
     $columns = preg_match("/^[a-z,]*$/", $a['columns']) === 1 ? explode(',', $a['columns']) : explode(',', 'name,city');
     $scriptid = uniqid("table-data");
@@ -146,34 +171,35 @@ function ffcommunitytable($atts)
                 <% } else { %>
                            <%= item.name  %>
                    <%  } %></td>';
-    $ffColumns['city']['head'] = '<th title="'.__('Stadt').'" class="sorttable_sorted">'.__('Stadt/Region').'<span id="sorttable_sortfwdind">&nbsp;▾</span></th>'.PHP_EOL; 
+    $ffColumns['city']['head'] = '<th title="'.__('Stadt').'" data-sort-initial="true">'.__('Stadt/Region').'</th>'.PHP_EOL; 
     $ffColumns['city']['js'] = '<% if (item.location.city) {%>
                 <td><%= item.location.city %>
                 </a><% } else { %>
                 <td>
                 <% } %>
                 </td>';
-    $ffColumns['firmware']['head'] = '<th title="'.__('Benutzte Firmware').'">'.__('Firmware').'</th>'.PHP_EOL; 
+    $ffColumns['firmware']['head'] = '<th data-hide="phone" title="'.__('Benutzte Firmware').'">'.__('Firmware').'</th>'.PHP_EOL; 
     $ffColumns['firmware']['js'] = '<% if (item.techDetails.firmware && item.techDetails.firmware.name) {%>
                 <td><%= item.techDetails.firmware.name %>
                 <% } else { %>
                 <td>
                 <% } %>
                 </td>';
-    $ffColumns['routing']['head'] = '<th title="'.__('Benutzte Routingprotokolle').'">'.__('Routing').'</th>'.PHP_EOL;
+    $ffColumns['routing']['head'] = '<th data-hide="phone" title="'.__('Benutzte Routingprotokolle').'">'.__('Routing').'</th>'.PHP_EOL;
     $ffColumns['routing']['js'] = '<td><%= item.techDetails.routing %></td>';
-    $ffColumns['nodes']['head'] = '<th title="'.__('Anzahl der Knoten').'" class="sorttable_numeric">'.__('Knoten').'</th>'.PHP_EOL;
+    $ffColumns['nodes']['head'] = '<th data-hide="phone" title="'.__('Anzahl der Knoten').'" data-type="numeric">'.__('Knoten').'</th>'.PHP_EOL;
     $ffColumns['nodes']['js'] = '<td><%= item.state.nodes   %></td>';
-    $ffColumns['contact']['head'] = '<th title="'.__('Wie kann man die Community kontaktieren?').'">'.__('Kontakt').'</th>'.PHP_EOL;
-    $ffColumns['contact']['js'] = '<td class=community-popup><ul class="contacts" style="height:<%- Math.round(_.size(item.contact)/6+0.4)*30+10  %>px; width: <%- 6*(30+5)%>px;">
+    $ffColumns['contact']['head'] = '<th data-class="community-popup" data-hide="phone" title="'.__('Wie kann man die Community kontaktieren?').'">'.__('Kontakt').'</th>'.PHP_EOL;
+    $ffColumns['contact']['js'] = '<td><span class="community-popup"><ul class="contacts" style="height:<%- Math.round(_.size(item.contact)/6+0.4)*30+10  %>px; width: <%- 6*(30+5)%>px;">
                 <% _.each(item.contact, function(contact, index, list) { %>
                         <li class="contact">
                         <a href="<%- contact %>" class="button <%- index %>" target="_window"></a>
                         </li>
-                        <% }); %>';
+                <% }); %>
+              </ul><span></td>';
 
-    $output = '<div id="communitytabelle">'.PHP_EOL;
-    $output .= '  <table class="table table-striped sortable community-table">'.PHP_EOL;
+    $output = '<div id="1communitytabelle">'.PHP_EOL;
+    $output .= '  <table id="ctable" class="sortable footable toggle-arrow-tiny community-table">'.PHP_EOL;
     $output .= '  <thead>'.PHP_EOL;
     $output .= '  <tr>'.PHP_EOL;
     foreach($columns as $column) {
@@ -199,7 +225,7 @@ function ffcommunitytable($atts)
 
   	$output .= '<script  type="text/javascript">'.PHP_EOL;
     $output .= '            var tableTemplate = jQuery("script.template#'.$scriptid.'").html();'.PHP_EOL;
-    $output .= '            window.onload = function(){'.PHP_EOL;
+    $output .= '            jQuery(document).ready(function(){'.PHP_EOL;
     $output .= '                    var url = "'.$summaryUrl.'";'.PHP_EOL;
     $output .= '                    jQuery.ajax({'.PHP_EOL;
 		$output .= 'url: url,'.PHP_EOL;
@@ -235,38 +261,17 @@ function ffcommunitytable($atts)
     $output .= '        _.templateSettings.variable = "items";'.PHP_EOL;
     $output .= '        var templ = _.template(tableTemplate);'.PHP_EOL;
 		$output .= '        jQuery("table.community-table tbody").html(templ(rows));'.PHP_EOL;
+		$output .= '        jQuery("#ctable").footable();'.PHP_EOL;
 		$output .= '        } ),'.PHP_EOL;
 		$output .= 'error: function(XMLHttpRequest, textStatus, errorThrown){alert("Error");'.PHP_EOL;
 		$output .= '}'.PHP_EOL;
 		$output .= '});'.PHP_EOL;
-		$output .= '};'.PHP_EOL;
-		
+		$output .= '});'.PHP_EOL;
 		$output .= '        </script> '.PHP_EOL;
 
     return $output;
 }
 
-function our_scripts() {
-    wp_enqueue_style("cssleaflet", "//api.freifunk.net/map/external/leaflet/leaflet.css");
-    wp_enqueue_style("cssleafletmc", "//api.freifunk.net/map/external/leaflet/MarkerCluster.css");
-    wp_enqueue_style("cssleafletmcd", "//api.freifunk.net/map/external/leaflet/MarkerCluster.Default.css");
-    wp_enqueue_style("cssleafletbutton", "//api.freifunk.net/map/external/leaflet/leaflet-button-control.css");
-    wp_enqueue_style("cssscrollbar", "//api.freifunk.net/timeline/malihu-scrollbar/jquery.mCustomScrollbar.min.css");
-    wp_enqueue_style("csstimeline", "//api.freifunk.net/timeline/timeline.css");
-    wp_enqueue_style("csstlcustom", "//api.freifunk.net/timeline/custom.css");
-    wp_enqueue_style("csscommunitymap", "//api.freifunk.net/map/community_map.css");
-    wp_enqueue_style("mystyles", plugin_dir_url( __FILE__ ). "ffcommunitymap.css");
-    wp_enqueue_script("leaflet", "//api.freifunk.net/map/external/leaflet/leaflet.js");
-    wp_enqueue_script("leaflet-button-control", "//api.freifunk.net/map/external/leaflet/leaflet-button-control.js");
-    wp_enqueue_script("leafletmc", "//api.freifunk.net/map/external/leaflet/leaflet.markercluster.js");
-    wp_enqueue_script("sortable", plugin_dir_url( __FILE__ ). "sorttable.js");
-    wp_enqueue_script("underscore");
-    wp_enqueue_script("communitymap", "//api.freifunk.net/map/community_map.js");
-    wp_enqueue_script("scrollbar", "//api.freifunk.net/timeline/malihu-scrollbar/jquery.mCustomScrollbar.concat.min.js");
-    wp_enqueue_script("timeline", "//api.freifunk.net/timeline/timeline.js");
-}
-
-add_action("wp_enqueue_scripts", "our_scripts");
 
 add_shortcode("ffcommunitymap", "ffcommunitymap");
 add_shortcode("ffcommunitytable", "ffcommunitytable");

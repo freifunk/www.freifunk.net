@@ -48,7 +48,7 @@ div.leaflet-popup-content div.community-popup ul.contacts li.contact
 {
     background-image: none;
     background-repeat: no-repeat;
-    margin-top: 10px;
+    margin-top: 0px;
     padding-left: 0em;
     background-position: 0 3px;
 }
@@ -59,3 +59,12 @@ div.leaflet-popup-content div.community-popup ul.contacts li.contact
   box-shadow: none !important;
 }
 
+div.footable-row-detail-name
+{
+  vertical-align: middle;
+}
+
+span.community-popup ul.contacts
+{
+  margin: 0 0 0 0;
+}
