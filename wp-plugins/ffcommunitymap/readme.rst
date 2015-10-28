@@ -59,6 +59,12 @@ Available options are:
 
 == Changelog ==
 
+Version 2.1
+
+* refactoring
+* table now sortable
+* table now mobile friendly
+
 Version 2.0
 
 * add community table
