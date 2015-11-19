@@ -53,7 +53,7 @@ function ffcommunitymap($atts)
     wp_enqueue_style("csstimeline", "//api.freifunk.net/timeline/timeline.css");
     wp_enqueue_style("csstlcustom", "//api.freifunk.net/timeline/custom.css");
     wp_enqueue_style("csscommunitymap", "//api.freifunk.net/map/community_map.css");
-    wp_enqueue_style("mystyles", plugin_dir_url( __FILE__ ). "ffcommunitymap.css");
+    wp_enqueue_style("mystyles", plugin_dir_url( __FILE__ ). "/css/ffcommunitymap.css");
     wp_enqueue_script("underscore");
     wp_enqueue_script("communitymap", "//api.freifunk.net/map/community_map.js");
     wp_enqueue_script("leaflet", "//api.freifunk.net/map/external/leaflet/leaflet.js");
@@ -156,11 +156,11 @@ function ffcommunitytable($atts)
     ), $atts);
 
     wp_enqueue_script("underscore", $in_footer = false);
-    wp_enqueue_script("footable", plugin_dir_url( __FILE__ ). "footable.js");
-    wp_enqueue_script("footablesort", plugin_dir_url( __FILE__ ). "footable.sort.js");
+    wp_enqueue_script("footable", plugin_dir_url( __FILE__ ). "js/footable.js");
+    wp_enqueue_script("footablesort", plugin_dir_url( __FILE__ ). "js/footable.sort.js");
     wp_enqueue_script("communitymap", "//api.freifunk.net/map/community_map.js");
-    wp_enqueue_style("mystyles", plugin_dir_url( __FILE__ ). "ffcommunitymap.css");
-    wp_enqueue_style("cssfootablecore", plugin_dir_url( __FILE__ ). "footable.core.css");
+    wp_enqueue_style("mystyles", plugin_dir_url( __FILE__ ). "css/ffcommunitymap.css");
+    wp_enqueue_style("cssfootablecore", plugin_dir_url( __FILE__ ). "css/footable.core.css");
     $summaryUrl = esc_url($a['summaryurl']);
     $columns = preg_match("/^[a-z,]*$/", $a['columns']) === 1 ? explode(',', $a['columns']) : explode(',', 'name,city');
     $scriptid = uniqid("table-data");
