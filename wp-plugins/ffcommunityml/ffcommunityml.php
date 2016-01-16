@@ -38,7 +38,7 @@ function ffcommunitymltable($atts)
     wp_enqueue_style("cssfootablecore", plugin_dir_url( __FILE__ ). "css/footable.core.css");
     $summaryUrl = esc_url($a['summaryurl']);
     $columns = preg_match("/^[a-z,]*$/", $a['columns']) === 1 ? explode(',', $a['columns']) : explode(',', 'name,city');
-    $scriptid = uniqid("table-data");
+    $scriptid = uniqid("table-ml-data");
 
     $ffColumns['name']['head'] = '<th title="'.__('Name der Community').'">'.__('Name').'</th>'.PHP_EOL;
     $ffColumns['name']['js'] = '<td ><% if (item.url) {%>
@@ -61,8 +61,8 @@ function ffcommunitymltable($atts)
                 <% } %>
                 </td>';
 
-    $output = '<div id="1communitytabelle">'.PHP_EOL;
-    $output .= '  <table id="ctable" class="sortable footable toggle-arrow-tiny community-table">'.PHP_EOL;
+    $output = '<div id="mltabelle">'.PHP_EOL;
+    $output .= '  <table id="mltable" class="sortable footable toggle-arrow-tiny ml-table">'.PHP_EOL;
     $output .= '  <thead>'.PHP_EOL;
     $output .= '  <tr>'.PHP_EOL;
     foreach($columns as $column) {
@@ -113,8 +113,8 @@ function ffcommunitymltable($atts)
     $output .= '        });'.PHP_EOL;
     $output .= '        _.templateSettings.variable = "items";'.PHP_EOL;
     $output .= '        var templ = _.template(tableTemplate);'.PHP_EOL;
-	$output .= '        jQuery("table.community-table tbody").html(templ(mailinglists));'.PHP_EOL;
-	$output .= '        jQuery("#ctable").footable();'.PHP_EOL;
+	$output .= '        jQuery("table.ml-table tbody").html(templ(mailinglists));'.PHP_EOL;
+	$output .= '        jQuery("#mltable").footable();'.PHP_EOL;
 	$output .= '        } ),'.PHP_EOL;
 	$output .= 'error: function(XMLHttpRequest, textStatus, errorThrown){alert("Error");'.PHP_EOL;
 	$output .= '}'.PHP_EOL;
