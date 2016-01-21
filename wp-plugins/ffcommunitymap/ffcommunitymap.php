@@ -156,6 +156,7 @@ function ffcommunitytable($atts)
     ), $atts);
 
     wp_enqueue_script("underscore", $in_footer = false);
+    wp_enqueue_script("ffctable", plugin_dir_url( __FILE__ ). "js/ffctable.js");
     wp_enqueue_script("footable", plugin_dir_url( __FILE__ ). "js/footable.js");
     wp_enqueue_script("footablesort", plugin_dir_url( __FILE__ ). "js/footable.sort.js");
     wp_enqueue_script("communitymap", "//api.freifunk.net/map/community_map.js");
