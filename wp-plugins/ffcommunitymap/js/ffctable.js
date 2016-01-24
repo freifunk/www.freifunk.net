@@ -67,6 +67,8 @@ var FFCTABLE = {
         var sinDeltaLat = Math.sin((item.location.lat-lat).toRad()/2);
         var sinDeltaLon = Math.sin((item.location.lon-lon).toRad()/2);
         item.distance = 2*radius*Math.asin(Math.sqrt(sinDeltaLat*sinDeltaLat + Math.cos(lat.toRad()) * Math.cos(item.location.lat.toRad()) * sinDeltaLon * sinDeltaLon));
+      } else {
+        item.distance = radius;
       }
     });
   },
