@@ -152,7 +152,7 @@ function ffcommunitytable($atts)
 {
     $a = shortcode_atts(array(
       'summaryurl'=> '//api.freifunk.net/map/ffApiJsonp.php?mode=summary&callback=?',
-      'columns' => 'city,name,firmware,routing,nodes,contact'
+      'columns' => 'city,name,firmware,routing,nodes,contact,distance'
     ), $atts);
 
     wp_enqueue_script("underscore", $in_footer = false);
@@ -188,6 +188,8 @@ function ffcommunitytable($atts)
                 </td>';
     $ffColumns['routing']['head'] = '<th data-hide="phone" title="'.__('Benutzte Routingprotokolle').'">'.__('Routing').'</th>'.PHP_EOL;
     $ffColumns['routing']['js'] = '<td><%= item.techDetails.routing %></td>';
+    $ffColumns['distance']['head'] = '<th data-hide="all" title="'.__('Entfernung zum angegebenen Ort').'">'.__('Entfernung').'</th>'.PHP_EOL;
+    $ffColumns['distance']['js'] = '<td data-sort-value="<%= item.distance %>"><%= item.distance %> km</td>';
     $ffColumns['nodes']['head'] = '<th data-hide="phone" title="'.__('Anzahl der Knoten').'" data-type="numeric">'.__('Knoten').'</th>'.PHP_EOL;
     $ffColumns['nodes']['js'] = '<td><%= item.state.nodes   %></td>';
     $ffColumns['contact']['head'] = '<th data-class="community-popup" data-hide="phone" title="'.__('Wie kann man die Community kontaktieren?').'">'.__('Kontakt').'</th>'.PHP_EOL;
