@@ -70,6 +70,7 @@ var FFCTABLE = {
       } else {
         item.distance = radius;
       }
+      item.distance = Math.round(item.distance/1000);
     });
   },
 
