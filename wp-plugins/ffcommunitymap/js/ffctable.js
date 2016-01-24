@@ -2,11 +2,11 @@
 var FFCTABLE = {
 
 
-  init: function (myTargetId) {
+  init: function (myTargetId, myUrl) {
     newTable = Object.create(this);
     newTable.targetId = myTargetId;
     newTable.tableTemplate = jQuery("script.template#" + newTable.targetId).html();
-    newTable.url = "//api.freifunk.net/map/ffApiJsonp.php?mode=summary&callback=?"; 
+    newTable.url = myUrl;
     newTable.communityData = null;
     return newTable;
   },
@@ -54,6 +54,20 @@ var FFCTABLE = {
         alert("Error" + textStatus);
       }
 
+    });
+  },
+
+  calculateDistance: function(lat, lon) {
+    var radius = 6371000; //Earth radius in meters
+    Number.prototype.toRad = function() {
+      return this * Math.PI / 180;
+    }
+    _.each(this.communityData, function(item, key, list){
+      if ( item.location.lat && item.location.lon ) {
+        var sinDeltaLat = Math.sin((item.location.lat-lat).toRad()/2);
+        var sinDeltaLon = Math.sin((item.location.lon-lon).toRad()/2);
+        item.distance = 2*radius*Math.asin(Math.sqrt(sinDeltaLat*sinDeltaLat + Math.cos(lat.toRad()) * Math.cos(item.location.lat.toRad()) * sinDeltaLon * sinDeltaLon));
+      }
     });
   },
 
