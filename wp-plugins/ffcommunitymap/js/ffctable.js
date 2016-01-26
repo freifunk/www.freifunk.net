@@ -8,6 +8,7 @@ var FFCTABLE = {
     newTable.tableTemplate = jQuery("script.template#" + newTable.targetId).html();
     newTable.url = myUrl;
     newTable.communityData = null;
+    newTable.footable = null;
     return newTable;
   },
 
@@ -44,6 +45,7 @@ var FFCTABLE = {
           if (item.contact.identica && !item.contact.identica.match(/^identica:.*/)) {
             item.contact.identica = "identica:" + item.contact.identica;
           }
+          item.distance = 40008000;
         });
         console.log(rows);
         this.table.communityData = rows;
@@ -78,7 +80,11 @@ var FFCTABLE = {
     _.templateSettings.variable = "items";
     var templ = _.template(this.tableTemplate);
     jQuery("table.community-table tbody").html(templ(this.communityData));
-    jQuery("#ctable").footable();
+    //if ( ! this.footable ) {
+      this.footable = jQuery("#ctable").footable();
+    //} else {
+      this.footable.redraw();
+    //}
   }
 
 }

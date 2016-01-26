@@ -157,11 +157,11 @@ function ffcommunitytable($atts)
 
     wp_enqueue_script("underscore", $in_footer = false);
     wp_enqueue_script("ffctable", plugin_dir_url( __FILE__ ). "js/ffctable.js");
-    wp_enqueue_script("footable", plugin_dir_url( __FILE__ ). "js/footable.js");
-    wp_enqueue_script("footablesort", plugin_dir_url( __FILE__ ). "js/footable.sort.js");
+    wp_enqueue_script("footable", plugin_dir_url( __FILE__ ). "js/footable.min.js");
+    wp_enqueue_script("footablesort", plugin_dir_url( __FILE__ ). "js/footable.sorting.js");
     wp_enqueue_script("communitymap", "//api.freifunk.net/map/community_map.js");
     wp_enqueue_style("mystyles", plugin_dir_url( __FILE__ ). "css/ffcommunitymap.css");
-    wp_enqueue_style("cssfootablecore", plugin_dir_url( __FILE__ ). "css/footable.core.css");
+    wp_enqueue_style("cssfootablecore", plugin_dir_url( __FILE__ ). "css/footable.standalone.min.css");
     $summaryUrl = esc_url($a['summaryurl']);
     $columns = preg_match("/^[a-z,]*$/", $a['columns']) === 1 ? explode(',', $a['columns']) : explode(',', 'name,city');
     $scriptid = uniqid("table-data");
@@ -179,20 +179,20 @@ function ffcommunitytable($atts)
                 <td>
                 <% } %>
                 </td>';
-    $ffColumns['firmware']['head'] = '<th data-hide="phone" title="'.__('Benutzte Firmware').'">'.__('Firmware').'</th>'.PHP_EOL; 
+    $ffColumns['firmware']['head'] = '<th data-breakpoints="xs" title="'.__('Benutzte Firmware').'">'.__('Firmware').'</th>'.PHP_EOL; 
     $ffColumns['firmware']['js'] = '<% if (item.techDetails.firmware && item.techDetails.firmware.name) {%>
                 <td><%= item.techDetails.firmware.name %>
                 <% } else { %>
                 <td>
                 <% } %>
                 </td>';
-    $ffColumns['routing']['head'] = '<th data-hide="phone" title="'.__('Benutzte Routingprotokolle').'">'.__('Routing').'</th>'.PHP_EOL;
+    $ffColumns['routing']['head'] = '<th data-breakpoints="xs" title="'.__('Benutzte Routingprotokolle').'">'.__('Routing').'</th>'.PHP_EOL;
     $ffColumns['routing']['js'] = '<td><%= item.techDetails.routing %></td>';
-    $ffColumns['distance']['head'] = '<th data-hide="all" title="'.__('Entfernung zum angegebenen Ort').'">'.__('Entfernung').'</th>'.PHP_EOL;
+    $ffColumns['distance']['head'] = '<th data-visible="false" title="'.__('Entfernung zum angegebenen Ort').'">'.__('Entfernung').'</th>'.PHP_EOL;
     $ffColumns['distance']['js'] = '<td data-sort-value="<%= item.distance %>"><%= item.distance %> km</td>';
-    $ffColumns['nodes']['head'] = '<th data-hide="phone" title="'.__('Anzahl der Knoten').'" data-type="numeric">'.__('Knoten').'</th>'.PHP_EOL;
+    $ffColumns['nodes']['head'] = '<th data-breakpoints="xs" title="'.__('Anzahl der Knoten').'" data-type="numeric">'.__('Knoten').'</th>'.PHP_EOL;
     $ffColumns['nodes']['js'] = '<td><%= item.state.nodes   %></td>';
-    $ffColumns['contact']['head'] = '<th data-class="community-popup" data-hide="phone" title="'.__('Wie kann man die Community kontaktieren?').'">'.__('Kontakt').'</th>'.PHP_EOL;
+    $ffColumns['contact']['head'] = '<th data-class="community-popup" data-breakpoints="xs" title="'.__('Wie kann man die Community kontaktieren?').'">'.__('Kontakt').'</th>'.PHP_EOL;
     $ffColumns['contact']['js'] = '<td><span class="community-popup"><ul class="contacts" style="height:<%- Math.round(_.size(item.contact)/6+0.4)*30+10  %>px; width: <%- 6*(30+5)%>px;">
                 <% _.each(item.contact, function(contact, index, list) { %>
                         <li class="contact">
@@ -202,7 +202,7 @@ function ffcommunitytable($atts)
               </ul><span></td>';
 
     $output = '<div id="1communitytabelle">'.PHP_EOL;
-    $output .= '  <table id="ctable" class="sortable footable toggle-arrow-tiny community-table">'.PHP_EOL;
+    $output .= '  <table id="ctable" data-sorting="true" class="footable community-table">'.PHP_EOL;
     $output .= '  <thead>'.PHP_EOL;
     $output .= '  <tr>'.PHP_EOL;
     foreach($columns as $column) {
