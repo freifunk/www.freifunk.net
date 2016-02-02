@@ -110,6 +110,16 @@ var FFCTABLE = {
     this.printTable();
   },
 
+  reset: function() {
+    this.communityData = _.sortBy(this.communityData, function(o){ return o.location.city;});
+    _.each(this.communityData, function(item, key, list) {
+      item.rank = 0;
+      item.distance = 40008000;
+    });
+    this.communityDataDisplay = this.communityData.slice(0);
+    this.printTable();
+  },
+
   printTable: function() {
     _.templateSettings.variable = "items";
     var templ = _.template(this.tableTemplate);
