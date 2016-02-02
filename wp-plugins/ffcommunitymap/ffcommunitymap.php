@@ -191,7 +191,7 @@ function ffcommunitytable($atts)
     $ffColumns['distance']['js'] = '<td data-sort-value="<%= item.distance %>"><%= item.distance %> km</td>';
     $ffColumns['nodes']['head'] = '<th data-breakpoints="xs" title="'.__('Anzahl der Knoten').'" data-type="numeric">'.__('Knoten').'</th>'.PHP_EOL;
     $ffColumns['nodes']['js'] = '<td><%= item.state.nodes   %></td>';
-    $ffColumns['contact']['head'] = '<th data-class="community-popup" data-breakpoints="xs" title="'.__('Wie kann man die Community kontaktieren?').'">'.__('Kontakt').'</th>'.PHP_EOL;
+    $ffColumns['contact']['head'] = '<th data-class="community-popup" data-type="html" data-breakpoints="xs" title="'.__('Wie kann man die Community kontaktieren?').'">'.__('Kontakt').'</th>'.PHP_EOL;
     $ffColumns['contact']['js'] = '<td><span class="community-popup"><ul class="contacts" style="height:<%- Math.round(_.size(item.contact)/6+0.4)*30+10  %>px; width: <%- 6*(30+5)%>px;">
                 <% _.each(item.contact, function(contact, index, list) { %>
                         <li class="contact">
@@ -201,7 +201,7 @@ function ffcommunitytable($atts)
               </ul></span></td>';
 
     $output = '<div id="' . $scriptid . 'communitytabelle">'.PHP_EOL;
-    $output .= '<div><form><input type="text" id="zipinput" placeholder="'.__('Postleitzahl').'"><button type="button" id="zipsubmit" class="btn waves-effect waves-light">Nächste Communities finden</button></form></div>'.PHP_EOL;
+    $output .= '<div><input type="text" id="zipinput" placeholder="'.__('Postleitzahl').'"><button type="button" id="zipsubmit" class="btn waves-effect waves-light">Nächste Communities finden</button></div>'.PHP_EOL;
     $output .= '  <table id="ctable" data-sorting="true" class="footable community-table">'.PHP_EOL;
     $output .= '  <thead>'.PHP_EOL;
     $output .= '  <tr>'.PHP_EOL;
