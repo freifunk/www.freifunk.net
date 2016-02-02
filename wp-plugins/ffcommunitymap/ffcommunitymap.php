@@ -152,7 +152,9 @@ function ffcommunitytable($atts)
 {
     $a = shortcode_atts(array(
       'summaryurl'=> '//api.freifunk.net/map/ffApiJsonp.php?mode=summary&callback=?',
-      'columns' => 'city,name,firmware,routing,nodes,contact,distance'
+      'columns' => 'city,name,firmware,routing,nodes,contact,distance',
+      'filteredcommunities' => '3',
+      'nominatimemail' => 'you@yourpovider.tld'
     ), $atts);
 
     wp_enqueue_script("underscore", $in_footer = false);
