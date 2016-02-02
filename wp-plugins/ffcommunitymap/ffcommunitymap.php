@@ -165,16 +165,16 @@ function ffcommunitytable($atts)
     $columns = preg_match("/^[a-z,]*$/", $a['columns']) === 1 ? explode(',', $a['columns']) : explode(',', 'name,city');
     $scriptid = uniqid("table-data");
 
-    $ffColumns['name']['head'] = '<th title="'.__('Name der Community').'">'.__('Name').'</th>'.PHP_EOL;
+    $ffColumns['name']['head'] = '<th data-type="html" title="'.__('Name der Community').'">'.__('Name').'</th>'.PHP_EOL;
     $ffColumns['name']['js'] = '<td ><% if (item.url) {%>
-                        <a href="<%= item.url%>" target="_blank"><%= item.name %>
+                        <a href="<%= item.url%>" target="_blank"><%= item.name %></a>
                 <% } else { %>
                            <%= item.name  %>
                    <%  } %></td>';
     $ffColumns['city']['head'] = '<th title="'.__('Stadt').'" data-sort-initial="true">'.__('Stadt/Region').'</th>'.PHP_EOL; 
     $ffColumns['city']['js'] = '<% if (item.location.city) {%>
                 <td><%= item.location.city %>
-                </a><% } else { %>
+                <% } else { %>
                 <td>
                 <% } %>
                 </td>';
