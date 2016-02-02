@@ -8,6 +8,7 @@ var FFCTABLE = {
     newTable.tableTemplate = jQuery("script.template#" + newTable.targetId).html();
     newTable.url = myUrl;
     newTable.communityData = null;
+    newTable.communityDataDisplay = null;
     newTable.footable = null;
     return newTable;
   },
@@ -50,6 +51,7 @@ var FFCTABLE = {
         });
         console.log(rows);
         this.table.communityData = rows;
+        this.table.communityDataDisplay = rows;
         this.table.printTable();
 
       },
@@ -101,15 +103,17 @@ var FFCTABLE = {
     this.communityData = _.sortBy(this.communityData, function(o) {return o.distance;});
     _.each(this.communityData, function(item, key, list) {
       item.rank = key;
-    }); 
-
+    });
+    
+    this.communityDataDisplay = this.communityData.slice(0);
+    this.communityDataDisplay.splice(3);
     this.printTable();
   },
 
   printTable: function() {
     _.templateSettings.variable = "items";
     var templ = _.template(this.tableTemplate);
-    jQuery("table.community-table tbody").html(templ(this.communityData));
+    jQuery("table.community-table tbody").html(templ(this.communityDataDisplay));
     jQuery("#ctable").footable();
   }
 
