@@ -158,7 +158,6 @@ function ffcommunitytable($atts)
     wp_enqueue_script("underscore", $in_footer = false);
     wp_enqueue_script("ffctable", plugin_dir_url( __FILE__ ). "js/ffctable.js");
     wp_enqueue_script("footable", plugin_dir_url( __FILE__ ). "js/footable.min.js");
-    wp_enqueue_script("footablesort", plugin_dir_url( __FILE__ ). "js/footable.sorting.js");
     wp_enqueue_script("communitymap", "//api.freifunk.net/map/community_map.js");
     wp_enqueue_style("mystyles", plugin_dir_url( __FILE__ ). "css/ffcommunitymap.css");
     wp_enqueue_style("cssfootablecore", plugin_dir_url( __FILE__ ). "css/footable.standalone.min.css");
@@ -199,9 +198,10 @@ function ffcommunitytable($atts)
                         <a href="<%- contact %>" class="button <%- index %>" target="_window"></a>
                         </li>
                 <% }); %>
-              </ul><span></td>';
+              </ul></span></td>';
 
-    $output = '<div id="1communitytabelle">'.PHP_EOL;
+    $output = '<div id="' . $scriptid . 'communitytabelle">'.PHP_EOL;
+    $output .= '<div><form><input type="text" id="zipinput" placeholder="'.__('Postleitzahl').'"><button type="button" id="zipsubmit" class="btn waves-effect waves-light">Nächste Communities finden</button></form></div>'.PHP_EOL;
     $output .= '  <table id="ctable" data-sorting="true" class="footable community-table">'.PHP_EOL;
     $output .= '  <thead>'.PHP_EOL;
     $output .= '  <tr>'.PHP_EOL;
@@ -229,8 +229,9 @@ function ffcommunitytable($atts)
     $output .= '<script  type="text/javascript">'.PHP_EOL;
     $output .= '            var cTable;'.PHP_EOL;
     $output .= '            jQuery(document).ready(function(){'.PHP_EOL;
-    $output .= '              cTable = FFCTABLE.init("'. $scriptid .'","'. $summaryUrl .'")'.PHP_EOL;
-    $output .= '              cTable.getData()'.PHP_EOL;
+    $output .= '              cTable = FFCTABLE.init("'. $scriptid .'","'. $summaryUrl .'");'.PHP_EOL;
+    $output .= '              cTable.getData();'.PHP_EOL;
+    $output .= '              jQuery("#zipsubmit").click(cTable, cTable.getDistanceByZip);'.PHP_EOL;
 		$output .= '});'.PHP_EOL;
 		$output .= '        </script> '.PHP_EOL;
 
