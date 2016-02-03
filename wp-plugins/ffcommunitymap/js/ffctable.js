@@ -2,12 +2,13 @@
 var FFCTABLE = {
 
 
-  init: function (myTargetId, myUrl, myEmail) {
+  init: function (myTargetId, myUrl, myEmail, myNumberOfCommunities) {
     newTable = Object.create(this);
     newTable.targetId = myTargetId;
     newTable.tableTemplate = jQuery("script.template#" + newTable.targetId).html();
     newTable.url = myUrl;
     newTable.email = myEmail;
+    newTable.numberOfCommunities = myNumberOfCommunities;
     newTable.communityData = null;
     newTable.communityDataDisplay = null;
     newTable.footable = null;
@@ -111,9 +112,9 @@ var FFCTABLE = {
     _.each(this.communityData, function(item, key, list) {
       item.rank = key;
     });
-    
+    jQuery('#hdistance').data('visible', 'true');
     this.communityDataDisplay = this.communityData.slice(0);
-    this.communityDataDisplay.splice(3);
+    this.communityDataDisplay.splice(this.numberOfCommunities);
     this.printTable();
   },
 
@@ -126,6 +127,7 @@ var FFCTABLE = {
       item.rank = 0;
       item.distance = 40008000;
     });
+    jQuery('#hdistance').data('visible', 'false');
     eventdata.data.communityDataDisplay = eventdata.data.communityData.slice(0);
     eventdata.data.printTable();
   },

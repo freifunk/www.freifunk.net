@@ -154,6 +154,7 @@ function ffcommunitytable($atts)
       'summaryurl'=> '//api.freifunk.net/map/ffApiJsonp.php?mode=summary&callback=?',
       'columns' => 'city,name,firmware,routing,nodes,contact,distance',
       'enable_zip_search' => '1',
+      'number_communities' => '3',
       'nominatim_email' => 'yourmail@domain.tld'
     ), $atts);
 
@@ -166,6 +167,7 @@ function ffcommunitytable($atts)
     $summaryUrl = esc_url($a['summaryurl']);
     $columns = preg_match("/^[a-z,]*$/", $a['columns']) === 1 ? explode(',', $a['columns']) : explode(',', 'name,city');
     $nominatim_email = is_email($a['nominatim_email']);
+    $number_communities = is_numeric($a['number_communities']) ? $a['number_communities'] : 3;
     $enable_zip_search = (esc_js($a['enable_zip_search']) === "1") ? true : false;
     $scriptid = uniqid("table-data");
 
@@ -191,7 +193,7 @@ function ffcommunitytable($atts)
                 </td>';
     $ffColumns['routing']['head'] = '<th data-breakpoints="xs" title="'.__('Benutzte Routingprotokolle').'">'.__('Routing').'</th>'.PHP_EOL;
     $ffColumns['routing']['js'] = '<td><%= item.techDetails.routing %></td>';
-    $ffColumns['distance']['head'] = '<th data-visible="false" title="'.__('Entfernung zum angegebenen Ort').'">'.__('Entfernung').'</th>'.PHP_EOL;
+    $ffColumns['distance']['head'] = '<th id="hdistance" data-visible="false" title="'.__('Entfernung zum angegebenen Ort').'">'.__('Entfernung').'</th>'.PHP_EOL;
     $ffColumns['distance']['js'] = '<td data-sort-value="<%= item.distance %>"><%= item.distance %> km</td>';
     $ffColumns['nodes']['head'] = '<th data-breakpoints="xs" title="'.__('Anzahl der Knoten').'" data-type="numeric">'.__('Knoten').'</th>'.PHP_EOL;
     $ffColumns['nodes']['js'] = '<td><%= item.state.nodes   %></td>';
@@ -235,9 +237,18 @@ function ffcommunitytable($atts)
     $output .= '<script  type="text/javascript">'.PHP_EOL;
     $output .= '            var cTable;'.PHP_EOL;
     $output .= '            jQuery(document).ready(function(){'.PHP_EOL;
-    $output .= '              cTable = FFCTABLE.init("'. $scriptid .'","'. $summaryUrl .'", "' . $nominatim_email . '");'.PHP_EOL;
+    $output .= '              cTable = FFCTABLE.init("'. $scriptid .'","'. $summaryUrl .'", "' . $nominatim_email . '", "'. $number_communities .'");'.PHP_EOL;
     $output .= '              cTable.getData();'.PHP_EOL;
     if ( $enable_zip_search) {
+      $output .= '              jQuery("#zipinput").bind("enterKey",function(e){'.PHP_EOL;
+      $output .= '                cTable.getDistanceByZip(cTable);'.PHP_EOL;
+      $output .= '              });'.PHP_EOL;
+      $output .= '              jQuery("#zipinput").keyup(function(e){'.PHP_EOL;
+      $output .= '                    if(e.keyCode == 13)'.PHP_EOL;
+      $output .= '                    {'.PHP_EOL;
+      $output .= '                              jQuery(this).trigger("enterKey");'.PHP_EOL;
+      $output .= '                    }'.PHP_EOL;
+      $output .= '              });'.PHP_EOL;
       $output .= '              jQuery("#zipsubmit").click(cTable, cTable.getDistanceByZip);'.PHP_EOL;
       $output .= '              jQuery("#zipreset").click(cTable, cTable.reset);'.PHP_EOL;
     }
