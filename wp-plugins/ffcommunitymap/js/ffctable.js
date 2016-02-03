@@ -2,11 +2,12 @@
 var FFCTABLE = {
 
 
-  init: function (myTargetId, myUrl) {
+  init: function (myTargetId, myUrl, myEmail) {
     newTable = Object.create(this);
     newTable.targetId = myTargetId;
     newTable.tableTemplate = jQuery("script.template#" + newTable.targetId).html();
     newTable.url = myUrl;
+    newTable.email = myEmail;
     newTable.communityData = null;
     newTable.communityDataDisplay = null;
     newTable.footable = null;
@@ -37,7 +38,7 @@ var FFCTABLE = {
           if (item.contact.twitter && !item.contact.twitter.match(/^http([s]?):\/\/.*/)) {
             item.contact.twitter = "https://twitter.com/" + item.contact.twitter;
           }
-          if (item.contact.irc && !item.contact.irc.match(/^irc:.*/)) {
+          if (item.contact.irc && !item.contact.irc.match(/^irc([s]?):.*/)) {
             item.contact.irc = "irc:" + item.contact.irc;
           }
           if (item.contact.jabber && !item.contact.jabber.match(/^jabber:.*/)) {
@@ -64,8 +65,14 @@ var FFCTABLE = {
 
   getDistanceByZip: function(eventdata) {
     var zip = jQuery("#zipinput").val();
+    var email;
+    if (eventdata.data) {
+      email = eventdata.data.email;
+    } else {
+      email = this.email;
+    }
     jQuery.ajax({ 
-      url: "https://nominatim.openstreetmap.org/?format=json&countrycodes=de,ch,at&limit=1&addressdetails=0&postalcode="+zip,
+      url: "https://nominatim.openstreetmap.org/?format=json&countrycodes=de,ch,at&limit=1&addressdetails=0&q="+zip+"&email="+email,
       table: this,
       jsonp: 'json_callback',
       dataType: "jsonp",
@@ -110,14 +117,17 @@ var FFCTABLE = {
     this.printTable();
   },
 
-  reset: function() {
-    this.communityData = _.sortBy(this.communityData, function(o){ return o.location.city;});
-    _.each(this.communityData, function(item, key, list) {
+  reset: function(eventdata) {
+    if ( ! eventdata.data) {
+      eventdata.data = this;
+    }
+    eventdata.data.communityData = _.sortBy(eventdata.data.communityData, function(o){ return o.location.city;});
+    _.each(eventdata.data.communityData, function(item, key, list) {
       item.rank = 0;
       item.distance = 40008000;
     });
-    this.communityDataDisplay = this.communityData.slice(0);
-    this.printTable();
+    eventdata.data.communityDataDisplay = eventdata.data.communityData.slice(0);
+    eventdata.data.printTable();
   },
 
   printTable: function() {
