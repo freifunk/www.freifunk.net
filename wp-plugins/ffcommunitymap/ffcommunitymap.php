@@ -209,6 +209,7 @@ function ffcommunitytable($atts)
     $output = '<div id="' . $scriptid . 'communitytabelle">'.PHP_EOL;
     if ( $enable_zip_search) {
       $output .= '<div><input type="text" id="zipinput" placeholder="'.__('Postleitzahl und/oder Ort').'"><button type="button" id="zipsubmit" class="btn waves-effect waves-light">Nächste Communities finden</button><button type="button" id="zipreset" class="btn waves-effect waves-light">Reset</button></div>'.PHP_EOL;
+      $output .= '<div id="zipresult"></div>'.PHP_EOL;
     }
     $output .= '  <table id="ctable" data-sorting="true" class="footable community-table">'.PHP_EOL;
     $output .= '  <thead>'.PHP_EOL;

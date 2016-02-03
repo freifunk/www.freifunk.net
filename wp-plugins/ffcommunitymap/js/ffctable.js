@@ -65,7 +65,7 @@ var FFCTABLE = {
   },
 
   getDistanceByZip: function(eventdata) {
-    var zip = jQuery("#zipinput").val();
+    var zip = jQuery("#zipinput").val().replace(/[^a-z0-9äöáéíóúñü \.,_-]/gim,"");
     var email;
     if (eventdata.data) {
       email = eventdata.data.email;
@@ -79,12 +79,14 @@ var FFCTABLE = {
       dataType: "jsonp",
       success: function(address){
         if ( typeof address !== 'undefined' && address.length > 0 ) {
+          jQuery("#zipresult").text("Ergebnis: " +  address[0].display_name);
           if (eventdata.data ) {
             eventdata.data.calculateDistance(Number(address[0].lat), Number(address[0].lon));
           } else {
             this.table.calculateDistance(Number(address[0].lat), Number(address[0].lon));
           }
-          console.log(eventdata.data);
+        } else {
+          jQuery("#zipresult").text("Leider kein Ergebnis");
         }
       },
       error: function(XMLHttpRequest, textStatus, errorThrown){
@@ -127,6 +129,7 @@ var FFCTABLE = {
       item.rank = 0;
       item.distance = 40008000;
     });
+    jQuery("#zipresult").text("");
     jQuery('#hdistance').data('visible', 'false');
     eventdata.data.communityDataDisplay = eventdata.data.communityData.slice(0);
     eventdata.data.printTable();
