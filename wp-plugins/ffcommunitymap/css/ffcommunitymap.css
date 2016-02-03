@@ -68,3 +68,10 @@ span.community-popup ul.contacts
 {
   margin: 0 0 0 0;
 }
+
+span.community-popup>ul.contacts>li {
+      background-image: none;
+          margin: 0px !important;
+              padding-left: 0;
+
+}
