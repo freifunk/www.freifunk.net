@@ -70,8 +70,25 @@ span.community-popup ul.contacts
 }
 
 span.community-popup>ul.contacts>li {
-      background-image: none;
-          margin: 0px !important;
-              padding-left: 0;
+    background-image: none;
+    margin: 0px !important;
+    padding-left: 0;
+}
 
+.footable-header>th {
+    font-size: 1.2rem;
+    line-height: 25px;
+    font-weight: normal;
+    text-transform: none;
+    color: #444;
+}
+
+div.zipsearch {
+
+}
+
+.zipsearch input, .zipsearch button {
+    width: 30%;
+    margin-right: 5px;
+    margin-bottom: 10px;
 }

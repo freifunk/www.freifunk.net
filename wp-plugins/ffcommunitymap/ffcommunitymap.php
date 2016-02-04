@@ -198,7 +198,7 @@ function ffcommunitytable($atts)
     $ffColumns['nodes']['head'] = '<th data-breakpoints="xs" title="'.__('Anzahl der Knoten').'" data-type="numeric">'.__('Knoten').'</th>'.PHP_EOL;
     $ffColumns['nodes']['js'] = '<td><%= item.state.nodes   %></td>';
     $ffColumns['contact']['head'] = '<th data-class="community-popup" data-type="html" data-breakpoints="xs" title="'.__('Wie kann man die Community kontaktieren?').'">'.__('Kontakt').'</th>'.PHP_EOL;
-    $ffColumns['contact']['js'] = '<td><span class="community-popup"><ul class="contacts" style="height:<%- Math.round(_.size(item.contact)/6+0.4)*30+10  %>px; width: <%- 6*(30+5)%>px;">
+    $ffColumns['contact']['js'] = '<td><span class="community-popup"><ul class="contacts" style="height:<%- Math.round(_.size(item.contact)/7+0.4)*30+10  %>px; width: <%- 7*(30+5)%>px;">
                 <% _.each(item.contact, function(contact, index, list) { %>
                         <li class="contact">
                         <a href="<%- contact %>" class="button <%- index %>" target="_window"></a>
@@ -208,9 +208,11 @@ function ffcommunitytable($atts)
 
     $output = '<div id="' . $scriptid . 'communitytabelle">'.PHP_EOL;
     if ( $enable_zip_search) {
-      $output .= '<div><input type="text" id="zipinput" placeholder="'.__('Postleitzahl und/oder Ort').'"><button type="button" id="zipsubmit" class="btn waves-effect waves-light">Nächste Communities finden</button><button type="button" id="zipreset" class="btn waves-effect waves-light">Reset</button></div>'.PHP_EOL;
+      $output .= '<h3>Communities in deiner Nähe</h3>'.PHP_EOL;
+      $output .= '<div class="zipsearch"><input type="text" id="zipinput" placeholder="'.__('Postleitzahl und/oder Ort').'"><button type="button" id="zipsubmit" class="btn waves-effect waves-light">Nächste Communities finden</button><button type="button" id="zipreset" class="btn waves-effect waves-light">Reset</button></div>'.PHP_EOL;
       $output .= '<div id="zipresult"></div>'.PHP_EOL;
     }
+    $output .= '  <h3>Übersicht</h3>'.PHP_EOL;
     $output .= '  <table id="ctable" data-sorting="true" class="footable community-table">'.PHP_EOL;
     $output .= '  <thead>'.PHP_EOL;
     $output .= '  <tr>'.PHP_EOL;
