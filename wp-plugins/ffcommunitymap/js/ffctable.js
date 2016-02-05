@@ -126,11 +126,11 @@ var FFCTABLE = {
     eventdata.data.communityData = _.sortBy(eventdata.data.communityData, function(o){ return o.location.city;});
     _.each(eventdata.data.communityData, function(item, key, list) {
       item.rank = 0;
-      item.distance = 40008000;
+      item.distance = "";
     });
     jQuery("#zipresult").text("");
     jQuery('#hdistance').data('visible', 'false');
-    jQuery("#ctable").find("#hdistance").remove();
+    //jQuery("#ctable").find("#hdistance").remove();
     eventdata.data.communityDataDisplay = eventdata.data.communityData.slice(0);
     eventdata.data.printTable();
   },

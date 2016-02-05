@@ -194,7 +194,7 @@ function ffcommunitytable($atts)
                 </td>';
     $ffColumns['routing']['head'] = '<th data-breakpoints="xs" title="'.__('Benutzte Routingprotokolle').'">'.__('Routing').'</th>'.PHP_EOL;
     $ffColumns['routing']['js'] = '<td><%= item.techDetails.routing %></td>';
-    $ffColumns['distance']['head'] = '<th id="hdistance" data-visible="false" data-type="number" title="'.__('Entfernung zum angegebenen Ort').'">'.__('Entfernung').'</th>'.PHP_EOL;
+    $ffColumns['distance']['head'] = '<th data-breakpoints="xs" id="hdistance" data-visible="false" data-type="number" title="'.__('Entfernung zum angegebenen Ort').'">'.__('Entfernung').'</th>'.PHP_EOL;
     $ffColumns['distance']['js'] = '<td class="cdistance" data-sort-value="<%= item.distance %>"><%= item.distance %> km</td>';
     $ffColumns['nodes']['head'] = '<th data-breakpoints="xs" title="'.__('Anzahl der Knoten').'" data-type="number">'.__('Knoten').'</th>'.PHP_EOL;
     $ffColumns['nodes']['js'] = '<td><%= item.state.nodes   %></td>';
