@@ -22,7 +22,6 @@ var FFCTABLE = {
       dataType: "jsonp",
       success: function(Response){
         var rows = Response;
-        console.log(this.table);
         rows = _.sortBy(rows, function(o){ return o.location.city;});
         _.each(rows, function(item, key, list) {
           if (item.url && !item.url.match(/^http([s]?):\/\/.*/)) {
@@ -73,7 +72,7 @@ var FFCTABLE = {
       email = this.email;
     }
     jQuery.ajax({ 
-      url: "https://nominatim.openstreetmap.org/?format=json&countrycodes=de,ch,at&limit=1&addressdetails=0&q="+zip+"&email="+email,
+      url: "https://nominatim.openstreetmap.org/?format=json&limit=1&addressdetails=0&q="+zip+"&email="+email,
       table: this,
       jsonp: 'json_callback',
       dataType: "jsonp",
@@ -131,6 +130,7 @@ var FFCTABLE = {
     });
     jQuery("#zipresult").text("");
     jQuery('#hdistance').data('visible', 'false');
+    jQuery("#ctable").find("#hdistance").remove();
     eventdata.data.communityDataDisplay = eventdata.data.communityData.slice(0);
     eventdata.data.printTable();
   },

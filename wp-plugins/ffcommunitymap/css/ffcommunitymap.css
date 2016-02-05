@@ -92,3 +92,7 @@ div.zipsearch {
     margin-right: 5px;
     margin-bottom: 10px;
 }
+
+#ctable td {
+  vertical-align: middle;
+}
