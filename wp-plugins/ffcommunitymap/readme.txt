@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== FF Communitymap ===
 Contributors: andibraeu
 Donate link: http://www.weimarnetz.de/spenden
 Tags: community map 
