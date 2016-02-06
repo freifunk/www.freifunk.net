@@ -113,6 +113,9 @@ var FFCTABLE = {
     _.each(this.communityData, function(item, key, list) {
       item.rank = key;
     });
+    jQuery('#hcity').data('sorted', 'false');
+    jQuery('#hdistance').data('sorted', 'true');
+    jQuery('#hdistance').data('direction', 'ASC');
     jQuery('#hdistance').data('visible', 'true');
     this.communityDataDisplay = this.communityData.slice(0);
     this.communityDataDisplay.splice(this.numberOfCommunities);
@@ -129,6 +132,8 @@ var FFCTABLE = {
       item.distance = "";
     });
     jQuery("#zipresult").text("");
+    jQuery('#hdistance').data('sorted', 'false');
+    jQuery('#hcity').data('sorted', 'true');
     jQuery('#hdistance').data('visible', 'false');
     //jQuery("#ctable").find("#hdistance").remove();
     eventdata.data.communityDataDisplay = eventdata.data.communityData.slice(0);

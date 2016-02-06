@@ -178,7 +178,7 @@ function ffcommunitytable($atts)
                 <% } else { %>
                            <%= item.name  %>
                    <%  } %></td>';
-    $ffColumns['city']['head'] = '<th title="'.__('Stadt').'" data-sorted="true" data-direction="ASC">'.__('Stadt/Region').'</th>'.PHP_EOL; 
+    $ffColumns['city']['head'] = '<th id="hcity" title="'.__('Stadt').'" data-sorted="true" data-direction="ASC">'.__('Stadt/Region').'</th>'.PHP_EOL; 
     $ffColumns['city']['js'] = '<% if (item.location.city) {%>
                 <td><%= item.location.city %>
                 <% } else { %>
