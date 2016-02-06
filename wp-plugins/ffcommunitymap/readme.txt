@@ -6,6 +6,8 @@ Requires at least: 3.6
 Tested up to: 4.4.1
 Stable tag: 3.0 
 
+Displays the freifunk community map and/or the freifunk community table
+
 == Description == 
 
 This plugin provides a shortcode to display the well known freifunk community map: [ffcommunitymap]
