@@ -3,8 +3,8 @@ Contributors: andibraeu
 Donate link: http://www.weimarnetz.de/spenden
 Tags: community map 
 Requires at least: 3.6
-Tested up to: 4.3
-Stable tag: trunk
+Tested up to: 4.4.1
+Stable tag: 3.0 
 
 == Description == 
 
@@ -65,17 +65,17 @@ Available options are:
 
 == Changelog ==
 
-Version 2.1
+ = 3.0 =
+ * add zip search to community table
 
-* refactoring
-* table now sortable
-* table now mobile friendly
+ = 2.1 =
+ * refactoring
+ * table now sortable
+ * table now mobile friendly
 
-Version 2.0
+ = 2.0 =
+ * add community table
 
-* add community table
-
-Version 1.0
-
-* initial release
-* show community map and use a bunch of options
+ = 1.0 =
+ * initial release
+ * show community map and use a bunch of options
