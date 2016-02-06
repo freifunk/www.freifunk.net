@@ -4,7 +4,7 @@
 Plugin Name: Ffcommunitymap
 Plugin URI: http://api.freifunk.net
 Description: display the freifunk community map
-Version: 3.0
+Version: 3.1
 Author: Andi Bräu
 Author URI: https://blog.andi95.de
 License: GPL2

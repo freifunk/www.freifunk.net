@@ -4,7 +4,7 @@ Donate link: http://www.weimarnetz.de/spenden
 Tags: community map 
 Requires at least: 3.6
 Tested up to: 4.4.1
-Stable tag: 3.0 
+Stable tag: 3.1 
 
 Displays the freifunk community map and/or the freifunk community table
 
@@ -45,6 +45,9 @@ Available options are:
 
 
 == Changelog ==
+
+ = 3.1 =
+ * some minor corrections
 
  = 3.0 =
  * add zip search to community table
