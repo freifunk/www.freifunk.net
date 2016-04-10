@@ -30,6 +30,8 @@ It is fully configurable to embed your own sources. These options are available:
 | showevents         | 0                                                  | show events in community popup                                       |
 | shownews           | 0                                                  | show news in community popup                                         |
 | mapboxid           | "mapbox.streets"                                   | id for your mapbox tiles                                             |
+| mapjs              | "//api.freifunk.net/map/community_map.js"          | link to community js files                                           |
+| popuptype          | "community"                                        | type for popups for different purposes                               |
 
 Another shortcode is for displaying a community table: [ffcommunitytable]
 

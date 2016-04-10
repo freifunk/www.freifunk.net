@@ -24,12 +24,17 @@ You should have received a copy of the GNU General Public License
 along with {Plugin Name}. If not, see {License URI}.
  */
 
+include_once("lib/PopupFactory.php");
+include_once("class.popups.php");
 
 function ffcommunitymap($atts)
 {
+    $pf = new PopupFactory();
     $a = shortcode_atts(array(
         'feed_url' => '//api.freifunk.net/feed/feed.php',
         'geojsonurl'=> '//api.freifunk.net/map/ffGeoJsonp.php?callback=?',
+	'mapjs' => '//api.freifunk.net/map/community_map.js',
+	'popuptype' => 'community',
         'mapboxid' => 'mapbox.streets',
         'showevents' => '1',
         'shownews' => '0',
@@ -45,26 +50,10 @@ function ffcommunitymap($atts)
         'width' => null
     ), $atts);
 
-    wp_enqueue_style("cssleaflet", "//api.freifunk.net/map/external/leaflet/leaflet.css");
-    wp_enqueue_style("cssleafletmc", "//api.freifunk.net/map/external/leaflet/MarkerCluster.css");
-    wp_enqueue_style("cssleafletmcd", "//api.freifunk.net/map/external/leaflet/MarkerCluster.Default.css");
-    wp_enqueue_style("cssleafletbutton", "//api.freifunk.net/map/external/leaflet/leaflet-button-control.css");
-    wp_enqueue_style("cssscrollbar", "//api.freifunk.net/timeline/malihu-scrollbar/jquery.mCustomScrollbar.min.css");
-    wp_enqueue_style("csstimeline", "//api.freifunk.net/timeline/timeline.css");
-    wp_enqueue_style("csstlcustom", "//api.freifunk.net/timeline/custom.css");
-    wp_enqueue_style("csscommunitymap", "//api.freifunk.net/map/community_map.css");
-    wp_enqueue_style("mystyles", plugin_dir_url( __FILE__ ). "/css/ffcommunitymap.css");
-    wp_enqueue_script("underscore");
-    wp_enqueue_script("communitymap", "//api.freifunk.net/map/community_map.js");
-    wp_enqueue_script("leaflet", "//api.freifunk.net/map/external/leaflet/leaflet.js");
-    wp_enqueue_script("leaflet-button-control", "//api.freifunk.net/map/external/leaflet/leaflet-button-control.js");
-    wp_enqueue_script("leafletmc", "//api.freifunk.net/map/external/leaflet/leaflet.markercluster.js");
-    wp_enqueue_script("scrollbar", "//api.freifunk.net/timeline/malihu-scrollbar/jquery.mCustomScrollbar.concat.min.js");
-    wp_enqueue_script("timeline", "//api.freifunk.net/timeline/timeline.js");
-    
-    
     $feedUrl = esc_url($a['feed_url']);
     $geoJsonUrl = esc_url($a['geojsonurl']);
+    $mapJs = esc_url($a['mapjs']);
+    $popupType = esc_html($a['popuptype']);
     $mapboxId = esc_html($a['mapboxid']);
     $showEvents = (esc_js($a['showevents']) === "1") ? "true" : "false";
     $showNews = (esc_js($a['shownews']) === "1") ? "true" : "false";
@@ -78,7 +67,25 @@ function ffcommunitymap($atts)
     $center = preg_match("/^\d[0-9\.]{1,},\d[0-9\.]{1,}$/", $a['center']) === 1 ? $a['center'] : "51.5,10.5";
     $height = preg_match("/^\d+(px|%)$/", $a['height']) === 1 ? $a['height'] : null;
     $width = preg_match("/^\d+(px|%)$/", $a['width']) === 1 ? $a['width'] : null;
+    
+    wp_enqueue_style("cssleaflet", "//api.freifunk.net/map/external/leaflet/leaflet.css");
+    wp_enqueue_style("cssleafletmc", "//api.freifunk.net/map/external/leaflet/MarkerCluster.css");
+    wp_enqueue_style("cssleafletmcd", "//api.freifunk.net/map/external/leaflet/MarkerCluster.Default.css");
+    wp_enqueue_style("cssleafletbutton", "//api.freifunk.net/map/external/leaflet/leaflet-button-control.css");
+    wp_enqueue_style("cssscrollbar", "//api.freifunk.net/timeline/malihu-scrollbar/jquery.mCustomScrollbar.min.css");
+    wp_enqueue_style("csstimeline", "//api.freifunk.net/timeline/timeline.css");
+    wp_enqueue_style("csstlcustom", "//api.freifunk.net/timeline/custom.css");
+    wp_enqueue_style("csscommunitymap", "//api.freifunk.net/map/community_map.css");
+    wp_enqueue_style("mystyles", plugin_dir_url( __FILE__ ). "/css/ffcommunitymap.css");
+    wp_enqueue_script("underscore");
+    wp_enqueue_script("communitymap", $mapJs);
+    wp_enqueue_script("leaflet", "//api.freifunk.net/map/external/leaflet/leaflet.js");
+    wp_enqueue_script("leaflet-button-control", "//api.freifunk.net/map/external/leaflet/leaflet-button-control.js");
+    wp_enqueue_script("leafletmc", "//api.freifunk.net/map/external/leaflet/leaflet.markercluster.js");
+    wp_enqueue_script("scrollbar", "//api.freifunk.net/timeline/malihu-scrollbar/jquery.mCustomScrollbar.concat.min.js");
+    wp_enqueue_script("timeline", "//api.freifunk.net/timeline/timeline.js");
 
+    $popup = $pf->getPopupClass($popupType);
     if ( $height ) {
         $height = 'height: '.$height.';';
     }
@@ -90,38 +97,7 @@ function ffcommunitymap($atts)
     $divid = uniqid("map");
     $output = '<div id="'.$divid.'" class="mapfull" '.$style.'>'.PHP_EOL;
     $output .= '</div>'.PHP_EOL;
-    $output .= '<script type="text/template" class="template" id="community-popup">';
-    $output .= '<div class="community-popup" data-id="<%- props.shortname %>">'.PHP_EOL;
-    $output .= '<% if ( props.name ) { %>'.PHP_EOL;
-    $output .= '<h2><a href="<%- props.url %>" target="_window"><%- props.name %></a></h2>'.PHP_EOL;
-    $output .= '<% } %>'.PHP_EOL;
-    $output .= '<% if (props.metacommunity) { %>'.PHP_EOL;
-    $output .= '<h3><%- props.metacommunity %></h3>'.PHP_EOL;
-    $output .= '<% } %>'.PHP_EOL;
-    $output .= '<% if (props.city) { %>'.PHP_EOL;
-    $output .= '<div class="city"><%- props.city  %></div>'.PHP_EOL;
-    $output .= '<% } %>'.PHP_EOL;
-    $output .= '<% if (props.nodes) { %>'.PHP_EOL;
-    $output .= '<div class="nodes">Zug&auml;nge: <%- props.nodes  %>'.PHP_EOL;
-    $output .= '<% if (props.state && props.age) { %>'.PHP_EOL;
-    $output .= '<span class="state <%- props.state  %>" title="Die letzte Aktualisierung der Daten war vor <%- props.age  %> Tagen">(<%- props.state  %>)</span>'.PHP_EOL;
-    $output .= ' <% } %>'.PHP_EOL;
-    $output .= '</div>'.PHP_EOL;
-    $output .= '<% } %>'.PHP_EOL;
-    $output .= '<% if (props.phone) { %>'.PHP_EOL;
-    $output .= '<div class="phone">&#9742; <%- props.phone  %></div>'.PHP_EOL;
-    $output .= '<% } %>'.PHP_EOL;
-    $output .= '<ul class="contacts" style="height:<%- Math.round(props.contacts.length/6+0.4)*30+10 %>px; width: <%- 6*(30+5)%>px;">'.PHP_EOL;
-    $output .= '<% _.each(props.contacts, function(contact, index, list) { %>'.PHP_EOL;
-    $output .= '<li class="contact">'.PHP_EOL;
-    $output .= '<a href="<%- contact.url %>" class="button <%- contact.type %>" target="_window"></a>'.PHP_EOL;
-    $output .= '</li>'.PHP_EOL;
-    $output .= '<% }); %>'.PHP_EOL;
-    $output .= '</ul>'.PHP_EOL;
-    $output .= '<div class="events">'.PHP_EOL;
-    $output .= '</div>'.PHP_EOL;
-    $output .= '</div>'.PHP_EOL;
-    $output .= '</script>'.PHP_EOL;
+    $output .= $popup->assemblePopup();
 
     $output .= '<script>'.PHP_EOL;
     $output .= 'jQuery(document).ready(function() {'.PHP_EOL;
