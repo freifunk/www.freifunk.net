@@ -218,10 +218,10 @@ function ffcommunitytable($atts)
     $output .= '            var cTable;'.PHP_EOL;
     $output .= '            jQuery(document).ready(function(){'.PHP_EOL;
     $output .= '              cTable = FFCTABLE.init("'. $scriptid .'","'. $summaryUrl .'", "' . $nominatim_email . '", "'. $number_communities .'");'.PHP_EOL;
-    $output .= '              cTable.getData();'.PHP_EOL;
+    $output .= '              cTable.getData(cTable.printTable);'.PHP_EOL;
     if ( $enable_zip_search) {
       $output .= '              jQuery("#zipinput").bind("enterKey",function(e){'.PHP_EOL;
-      $output .= '                cTable.getDistanceByZip(cTable);'.PHP_EOL;
+      $output .= '                cTable.getDistanceByZip(cTable, cTable.printTable);'.PHP_EOL;
       $output .= '              });'.PHP_EOL;
       $output .= '              jQuery("#zipinput").keyup(function(e){'.PHP_EOL;
       $output .= '                    if(e.keyCode == 13)'.PHP_EOL;
@@ -229,8 +229,8 @@ function ffcommunitytable($atts)
       $output .= '                              jQuery(this).trigger("enterKey");'.PHP_EOL;
       $output .= '                    }'.PHP_EOL;
       $output .= '              });'.PHP_EOL;
-      $output .= '              jQuery("#zipsubmit").click(cTable, cTable.getDistanceByZip);'.PHP_EOL;
-      $output .= '              jQuery("#zipreset").click(cTable, cTable.reset);'.PHP_EOL;
+      $output .= '              jQuery("#zipsubmit").click(function(e) {cTable.getDistanceByZip(cTable, cTable.printTable);});'.PHP_EOL;
+      $output .= '              jQuery("#zipreset").click(function(e) {cTable.reset(cTable, cTable.printTable);});'.PHP_EOL;
     }
 		$output .= '});'.PHP_EOL;
 		$output .= '        </script> '.PHP_EOL;
