@@ -238,7 +238,12 @@ function ffcommunitytable($atts)
     return $output;
 }
 
+function ffapijs($atts) {
+    wp_enqueue_script("underscore", $in_footer = false);
+    wp_enqueue_script("ffctable", plugin_dir_url( __FILE__ ). "js/ffctable.js");
+}
 
 add_shortcode("ffcommunitymap", "ffcommunitymap");
+add_shortcode("ffapijs", "ffapijs");
 add_shortcode("ffcommunitytable", "ffcommunitytable");
 
