@@ -11,13 +11,15 @@ var FFCTABLE = {
     newTable.numberOfCommunities = myNumberOfCommunities;
     newTable.communityData = null;
     newTable.communityDataDisplay = null;
+    newTable.addressFound = null;
     newTable.footable = null;
     return newTable;
   },
 
-  getData: function() {
+  getData: function(callback) {
     jQuery.ajax({
       url: this.url,
+      callback: callback,
       table: this,
       dataType: "jsonp",
       success: function(Response){
@@ -53,7 +55,7 @@ var FFCTABLE = {
         console.log(rows);
         this.table.communityData = rows;
         this.table.communityDataDisplay = rows;
-        this.table.printTable();
+        this.callback(this.table);
 
       },
       error: function(XMLHttpRequest, textStatus, errorThrown){
@@ -63,7 +65,7 @@ var FFCTABLE = {
     });
   },
 
-  getDistanceByZip: function(eventdata) {
+  getDistanceByZip: function(eventdata, callback) {
     var zip = jQuery("#zipinput").val().replace(/[^a-z0-9äöáéíóúñü \.,_-]/gim,"");
     var email;
     if (eventdata.data) {
@@ -74,6 +76,7 @@ var FFCTABLE = {
     jQuery.ajax({ 
       url: "https://nominatim.openstreetmap.org/?format=json&limit=1&addressdetails=0&q="+zip+"&email="+email,
       table: this,
+      callback: callback,
       jsonp: 'json_callback',
       dataType: "jsonp",
       success: function(address){
@@ -81,8 +84,12 @@ var FFCTABLE = {
           jQuery("#zipresult").text("Ergebnis: " +  address[0].display_name);
           if (eventdata.data ) {
             eventdata.data.calculateDistance(Number(address[0].lat), Number(address[0].lon));
+            eventdata.data.addressFound = address[0];
+            this.callback(eventdata.data, "calculateDistance");
           } else {
             this.table.calculateDistance(Number(address[0].lat), Number(address[0].lon));
+            this.table.addressFound = address[0];
+            this.callback(this.table, "calculateDistance");
           }
         } else {
           jQuery("#zipresult").text("Leider kein Ergebnis");
@@ -113,39 +120,47 @@ var FFCTABLE = {
     _.each(this.communityData, function(item, key, list) {
       item.rank = key;
     });
-    jQuery('#hcity').data('sorted', 'false');
-    jQuery('#hdistance').data('sorted', 'true');
-    jQuery('#hdistance').data('direction', 'ASC');
-    jQuery('#hdistance').data('visible', 'true');
     this.communityDataDisplay = this.communityData.slice(0);
     this.communityDataDisplay.splice(this.numberOfCommunities);
-    this.printTable();
   },
 
-  reset: function(eventdata) {
-    if ( ! eventdata.data) {
-      eventdata.data = this;
+  reset: function(data, callback) {
+    if ( ! data.data) {
+      data.data = this;
     }
-    eventdata.data.communityData = _.sortBy(eventdata.data.communityData, function(o){ return o.location.city;});
-    _.each(eventdata.data.communityData, function(item, key, list) {
+    data.data.communityData = _.sortBy(data.data.communityData, function(o){ return o.location.city;});
+    _.each(data.data.communityData, function(item, key, list) {
       item.rank = 0;
       item.distance = "";
     });
-    jQuery("#zipresult").text("");
-    jQuery('#hdistance').data('sorted', 'false');
-    jQuery('#hcity').data('sorted', 'true');
-    jQuery('#hdistance').data('visible', 'false');
-    //jQuery("#ctable").find("#hdistance").remove();
-    eventdata.data.communityDataDisplay = eventdata.data.communityData.slice(0);
-    eventdata.data.printTable();
+    data.data.communityDataDisplay = data.data.communityData.slice(0);
+    callback(data.data, "reset");
   },
 
-  printTable: function() {
+  printTable: function(data, type) {
+    if ( ! data.data ) {
+      data = this.table;
+    } else if (data.data){
+      data = data.data;
+    }
     _.templateSettings.variable = "items";
-    var templ = _.template(this.tableTemplate);
-    jQuery("table.community-table tbody").html(templ(this.communityDataDisplay));
+    var templ = _.template(data.tableTemplate);
+    if (type == "calculateDistance") {
+      jQuery('#hcity').data('sorted', 'false');
+      jQuery('#hdistance').data('sorted', 'true');
+      jQuery('#hdistance').data('direction', 'ASC');
+      jQuery('#hdistance').data('visible', 'true');
+    } else if (type == "reset") {
+      jQuery("#zipresult").text("");
+      jQuery('#hdistance').data('sorted', 'false');
+      jQuery('#hcity').data('sorted', 'true');
+      jQuery('#hdistance').data('visible', 'false');
+    }
+    jQuery("table.community-table tbody").html(templ(data.communityDataDisplay));
     jQuery("#ctable").footable();
   }
+
+
 
 }
 
