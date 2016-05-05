@@ -25,7 +25,7 @@ along with {Plugin Name}. If not, see {License URI}.
  */
 
 include_once("lib/PopupFactory.php");
-include_once("class.popups.php");
+include_once("lib/class.popups.php");
 
 function ffcommunitymap($atts)
 {
