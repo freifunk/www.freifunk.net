@@ -130,7 +130,7 @@ function getSortedClass($orderBy, $column)
 }
 
 
-add_option('ffapi_summarized_dir', "http://freifunk.net/map/ffSummarizedDir.json");
+add_option('ffapi_summarized_dir', "https://api.freifunk.net/map/ffSummarizedDir.json");
 add_option('http_timeout', 2);
 add_option('cache_timeout', 1 * HOUR_IN_SECONDS);
 
