@@ -4,7 +4,7 @@ Donate link: http://www.weimarnetz.de/spenden
 Tags: community map, freifunk, wifi
 Requires at least: 3.6
 Tested up to: 4.5
-Stable tag: 4.0
+Stable tag: 4.1
 
 Displays the freifunk community map and/or the freifunk community table
 
@@ -41,6 +41,9 @@ It is fully configurable to embed your own sources. These options are available:
 * zoomlevel
  * Default: 5
  * Description: default zoom level on page load
+* scrollandzoom
+ * Default: 1
+ * Enable scroll and zooming by mouse wheel or one-finger-touch
 * center
  * Default: [51.5,10.5]
  * Description: initial center of map
@@ -133,6 +136,9 @@ jQuery(document).ready(function() {
 </script>`
 
 == Changelog ==
+
+ = 4.1 =
+ * add option to disable scroll by mouse wheel or one-finger-touch
 
  = 4.0 =
  * javascripts now use callbacks, we're more flexible to use api data

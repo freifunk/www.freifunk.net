@@ -4,7 +4,7 @@
 Plugin Name: Ffcommunitymap
 Plugin URI: http://api.freifunk.net
 Description: display the freifunk community map
-Version: 4.0 
+Version: 4.1
 Author: Andi Bräu
 Author URI: https://blog.andi95.de
 License: GPL2
@@ -33,8 +33,8 @@ function ffcommunitymap($atts)
     $a = shortcode_atts(array(
         'feed_url' => '//api.freifunk.net/feed/feed.php',
         'geojsonurl'=> '//api.freifunk.net/map/ffGeoJsonp.php?callback=?',
-	'mapjs' => '//api.freifunk.net/map/community_map.js',
-	'popuptype' => 'community',
+    	'mapjs' => '//api.freifunk.net/map/community_map.js',
+	    'popuptype' => 'community',
         'mapboxid' => 'mapbox.streets',
         'showevents' => '1',
         'shownews' => '0',
@@ -45,6 +45,7 @@ function ffcommunitymap($atts)
         'eventscontentlimit' => '2',
         'postcontentlength' => '30',
         'zoomlevel' => '5',
+        'scrollandzoom' => '1',
         'center' => '51.5,10.5',
         'height' => null,
         'width' => null
@@ -64,6 +65,7 @@ function ffcommunitymap($atts)
     $eventsContentLimit = is_numeric($a['eventscontentlimit']) ? $a['eventscontentlimit'] : 2;
     $postContentLength = is_numeric($a['postcontentlength']) ? $a['postcontentlength'] : 30;
     $zoomLevel = is_numeric($a['zoomlevel']) ? $a['zoomlevel'] : 4;
+    $scrollAndZoom = (esc_js($a['scrollandzoom']) === "1") ? "true" : "false";
     $center = preg_match("/^\d[0-9\.]{1,},\d[0-9\.]{1,}$/", $a['center']) === 1 ? $a['center'] : "51.5,10.5";
     $height = preg_match("/^\d+(px|%)$/", $a['height']) === 1 ? $a['height'] : null;
     $width = preg_match("/^\d+(px|%)$/", $a['width']) === 1 ? $a['width'] : null;
@@ -113,6 +115,8 @@ function ffcommunitymap($atts)
     $output .= 'eventsContentLimit: '. $eventsContentLimit .','.PHP_EOL;
     $output .= 'postContentLength: '. $postContentLength .','.PHP_EOL;
     $output .= 'zoomLevel: '.$zoomLevel.','.PHP_EOL;
+    $output .= 'scrollWheelZoom: '.$scrollAndZoom.','.PHP_EOL;
+    $output .= 'touchZoom: '.$scrollAndZoom.','.PHP_EOL;
     $output .= 'center: ['.$center.'],'.PHP_EOL;
     $output .= 'divid: "'. $divid .'",'.PHP_EOL;
     $output .= 'mapboxId: "'.$mapboxId . '"'.PHP_EOL;
