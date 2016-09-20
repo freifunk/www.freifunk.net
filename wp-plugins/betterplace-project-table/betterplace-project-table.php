@@ -94,7 +94,7 @@ function betterplaceprojecttable($atts)
         $output .= "<td class=\"numeric\">" . $bpProject['completedNeed'] . "</td>";
         $output .= "<td class=\"numeric\">" . $bpProject['donors'] . "</td>";
         if (empty($bpProject['progress'])) {
-            $output .= "<td></td>";
+            $output .= "<td class=\"progress\"></td>";
         } else {
             $output .= "<td class=\"progress\" sorttable_customkey='" . $bpProject['progress'] . "'>" . do_shortcode("[wppb progress=" . $bpProject['progress'] . " fullwidth=false option=flat location=inside color=#009ee0]") . "</td>";
         }
@@ -130,7 +130,7 @@ function getSortedClass($orderBy, $column)
 }
 
 
-add_option('ffapi_summarized_dir', "https://api.freifunk.net/map/ffSummarizedDir.json");
+add_option('ffapi_summarized_dir', "https://api.freifunk.net/data/ffSummarizedDir.json");
 add_option('http_timeout', 2);
 add_option('cache_timeout', 1 * HOUR_IN_SECONDS);
 
