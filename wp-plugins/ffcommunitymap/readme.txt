@@ -3,8 +3,8 @@ Contributors: andibraeu
 Donate link: http://www.weimarnetz.de/spenden
 Tags: community map, freifunk, wifi
 Requires at least: 3.6
-Tested up to: 4.5
-Stable tag: 4.1
+Tested up to: 5.6.2
+Stable tag: 4.2
 
 Displays the freifunk community map and/or the freifunk community table
 
@@ -136,6 +136,9 @@ jQuery(document).ready(function() {
 </script>`
 
 == Changelog ==
+
+ = 4.2 =
+ * use an icon font instead of an image for contact options 
 
  = 4.1 =
  * add option to disable scroll by mouse wheel or one-finger-touch
