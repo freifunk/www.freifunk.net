@@ -4,7 +4,7 @@ Donate link: http://www.weimarnetz.de/spenden
 Tags: community map, freifunk, wifi
 Requires at least: 3.6
 Tested up to: 5.6.2
-Stable tag: 4.2
+Stable tag: 4.3
 
 Displays the freifunk community map and/or the freifunk community table
 

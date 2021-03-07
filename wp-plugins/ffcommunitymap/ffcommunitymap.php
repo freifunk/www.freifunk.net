@@ -4,7 +4,7 @@
 Plugin Name: Ffcommunitymap
 Plugin URI: http://api.freifunk.net
 Description: display the freifunk community map
-Version: 4.1
+Version: 4.3
 Author: Andi Bräu
 Author URI: https://blog.andi95.de
 License: GPL2
@@ -78,7 +78,7 @@ function ffcommunitymap($atts)
     wp_enqueue_style("csstimeline", "//api.freifunk.net/timeline/timeline.css");
     wp_enqueue_style("csstlcustom", "//api.freifunk.net/timeline/custom.css");
     wp_enqueue_style("csscommunitymap", "//api.freifunk.net/map/community_map.css");
-    wp_enqueue_style("cssforkawesome", plugin_dir_url( __FILE__ ). "fonts/fontawesome/css/fort-awesome.min.css");
+    wp_enqueue_style("cssforkawesome", plugin_dir_url( __FILE__ ). "fonts/forkawesome/css/fork-awesome.min.css");
     wp_enqueue_style("mystyles", plugin_dir_url( __FILE__ ). "/css/ffcommunitymap.css");
     wp_enqueue_script("underscore");
     wp_enqueue_script("communitymap", $mapJs);
@@ -146,7 +146,7 @@ function ffcommunitytable($atts)
     wp_enqueue_style("mystyles", plugin_dir_url( __FILE__ ). "css/ffcommunitymap.css");
     wp_enqueue_style("cssfootablecore", plugin_dir_url( __FILE__ ). "css/footable.standalone.min.css");
     wp_enqueue_style("cssforkawesome", plugin_dir_url( __FILE__ ). "fonts/forkawesome/css/fork-awesome.min.css");
-    $summaryUrl = esc_url($a['summaryurl']);
+    $summaryUrl = esc_url_raw($a['summaryurl']);
     $columns = preg_match("/^[a-z,]*$/", $a['columns']) === 1 ? explode(',', $a['columns']) : explode(',', 'name,city');
     $nominatim_email = is_email($a['nominatim_email']);
     $number_communities = is_numeric($a['number_communities']) ? $a['number_communities'] : 3;
