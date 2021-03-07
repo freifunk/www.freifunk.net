@@ -96,3 +96,7 @@ div.zipsearch {
 #ctable td {
   vertical-align: middle;
 }
+
+#ctable li.contact a.contact-icon {
+  color: #47a3da;
+}

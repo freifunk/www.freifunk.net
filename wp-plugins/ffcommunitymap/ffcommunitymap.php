@@ -9,17 +9,17 @@ Author: Andi Bräu
 Author URI: https://blog.andi95.de
 License: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
- 
+
 {Plugin Name} is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 2 of the License, or
 any later version.
- 
+
 {Plugin Name} is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
- 
+
 You should have received a copy of the GNU General Public License
 along with {Plugin Name}. If not, see {License URI}.
  */
@@ -69,7 +69,7 @@ function ffcommunitymap($atts)
     $center = preg_match("/^\d[0-9\.]{1,},\d[0-9\.]{1,}$/", $a['center']) === 1 ? $a['center'] : "51.5,10.5";
     $height = preg_match("/^\d+(px|%)$/", $a['height']) === 1 ? $a['height'] : null;
     $width = preg_match("/^\d+(px|%)$/", $a['width']) === 1 ? $a['width'] : null;
-    
+
     wp_enqueue_style("cssleaflet", "//api.freifunk.net/map/external/leaflet/leaflet.css");
     wp_enqueue_style("cssleafletmc", "//api.freifunk.net/map/external/leaflet/MarkerCluster.css");
     wp_enqueue_style("cssleafletmcd", "//api.freifunk.net/map/external/leaflet/MarkerCluster.Default.css");
@@ -78,6 +78,7 @@ function ffcommunitymap($atts)
     wp_enqueue_style("csstimeline", "//api.freifunk.net/timeline/timeline.css");
     wp_enqueue_style("csstlcustom", "//api.freifunk.net/timeline/custom.css");
     wp_enqueue_style("csscommunitymap", "//api.freifunk.net/map/community_map.css");
+    wp_enqueue_style("cssforkawesome", plugin_dir_url( __FILE__ ). "fonts/fontawesome/css/fort-awesome.min.css");
     wp_enqueue_style("mystyles", plugin_dir_url( __FILE__ ). "/css/ffcommunitymap.css");
     wp_enqueue_script("underscore");
     wp_enqueue_script("communitymap", $mapJs);
@@ -144,7 +145,7 @@ function ffcommunitytable($atts)
     wp_enqueue_script("communitymap", "//api.freifunk.net/map/community_map.js");
     wp_enqueue_style("mystyles", plugin_dir_url( __FILE__ ). "css/ffcommunitymap.css");
     wp_enqueue_style("cssfootablecore", plugin_dir_url( __FILE__ ). "css/footable.standalone.min.css");
-    wp_enqueue_style("cssfontawesome", plugin_dir_url( __FILE__ ). "css/font-awesome.min.css");
+    wp_enqueue_style("cssforkawesome", plugin_dir_url( __FILE__ ). "fonts/forkawesome/css/fork-awesome.min.css");
     $summaryUrl = esc_url($a['summaryurl']);
     $columns = preg_match("/^[a-z,]*$/", $a['columns']) === 1 ? explode(',', $a['columns']) : explode(',', 'name,city');
     $nominatim_email = is_email($a['nominatim_email']);
@@ -158,14 +159,14 @@ function ffcommunitytable($atts)
                 <% } else { %>
                            <%= item.name  %>
                    <%  } %></td>';
-    $ffColumns['city']['head'] = '<th id="hcity" title="'.__('Stadt').'" data-sorted="true" data-direction="ASC">'.__('Stadt/Region').'</th>'.PHP_EOL; 
+    $ffColumns['city']['head'] = '<th id="hcity" title="'.__('Stadt').'" data-sorted="true" data-direction="ASC">'.__('Stadt/Region').'</th>'.PHP_EOL;
     $ffColumns['city']['js'] = '<% if (item.location.city) {%>
                 <td><%= item.location.city %>
                 <% } else { %>
                 <td>
                 <% } %>
                 </td>';
-    $ffColumns['firmware']['head'] = '<th data-breakpoints="xs" title="'.__('Benutzte Firmware').'">'.__('Firmware').'</th>'.PHP_EOL; 
+    $ffColumns['firmware']['head'] = '<th data-breakpoints="xs" title="'.__('Benutzte Firmware').'">'.__('Firmware').'</th>'.PHP_EOL;
     $ffColumns['firmware']['js'] = '<% if (item.techDetails.firmware && item.techDetails.firmware.name) {%>
                 <td><%= item.techDetails.firmware.name %>
                 <% } else { %>
@@ -180,9 +181,14 @@ function ffcommunitytable($atts)
     $ffColumns['nodes']['js'] = '<td><%= item.state.nodes   %></td>';
     $ffColumns['contact']['head'] = '<th data-class="community-popup" data-type="html" data-breakpoints="xs" title="'.__('Wie kann man die Community kontaktieren?').'">'.__('Kontakt').'</th>'.PHP_EOL;
     $ffColumns['contact']['js'] = '<td><span class="community-popup"><ul class="contacts" style="width: <%- 7*(30+5)%>px;">
-                <% _.each(item.contact, function(contact, index, list) { %>
+                <% _.each(item.contacts, function(contact, index, list) { %>
                         <li class="contact">
-                        <a href="<%- contact %>" class="button <%- index %>" target="_window"></a>
+                          <a href="<%- contact.url %>" target="_window" class="contact-icon">
+                            <span class="fa-stack fa-lg">
+                              <i class="fa fa-square fa-stack-2x"></i>
+                              <i class="fa fa-<%- contact.type %> fa-stack-1x fa-inverse" aria-hidden="true"></i>
+                            </span>
+                          </a>
                         </li>
                 <% }); %>
               </ul></span></td>';
@@ -250,4 +256,3 @@ function ffapijs($atts) {
 add_shortcode("ffcommunitymap", "ffcommunitymap");
 add_shortcode("ffapijs", "ffapijs");
 add_shortcode("ffcommunitytable", "ffcommunitytable");
-

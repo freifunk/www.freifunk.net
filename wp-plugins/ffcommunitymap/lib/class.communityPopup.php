@@ -6,7 +6,7 @@ class communityPopup extends Popups {
 
   public function assemblePopup() {
     $this->popup = '<script type="text/template" class="template" id="community-popup">';
-    $this->popup .= '<div class="community-popup" data-id="<%- props.shortname %>">'.PHP_EOL;
+    $this->popup .= '<div id="community-popup" class="community-popup" data-id="<%- props.shortname %>">'.PHP_EOL;
     $this->popup .= '<% if ( props.name ) { %>'.PHP_EOL;
     $this->popup .= '<h2><a href="<%- props.url %>" target="_window"><%- props.name %></a></h2>'.PHP_EOL;
     $this->popup .= '<% } %>'.PHP_EOL;
@@ -29,7 +29,12 @@ class communityPopup extends Popups {
     $this->popup .= '<ul class="contacts" style="height:<%- Math.round(props.contacts.length/6+0.4)*30+10 %>px; width: <%- 6*(30+5)%>px;">'.PHP_EOL;
     $this->popup .= '<% _.each(props.contacts, function(contact, index, list) { %>'.PHP_EOL;
     $this->popup .= '<li class="contact">'.PHP_EOL;
-    $this->popup .= '<a href="<%- contact.url %>" class="button <%- contact.type %>" target="_window"></a>'.PHP_EOL;
+    $this->popup .= '<a href="<%- contact.url %>" target="_window" class="contact-icon">'.PHP_EOL;
+    $this->popup .= '<span class="fa-stack fa-lg">'.PHP_EOL;
+    $this->popup .= '<i class="fa fa-square fa-stack-2x"></i>'.PHP_EOL;
+    $this->popup .= '<i class="fa fa-<%- contact.type %> fa-stack-1x fa-inverse" aria-hidden="true"></i>'.PHP_EOL;
+    $this->popup .= '</span>'.PHP_EOL;
+    $this->popup .= '</a>'.PHP_EOL;
     $this->popup .= '</li>'.PHP_EOL;
     $this->popup .= '<% }); %>'.PHP_EOL;
     $this->popup .= '</ul>'.PHP_EOL;
@@ -38,6 +43,6 @@ class communityPopup extends Popups {
     $this->popup .= '</div>'.PHP_EOL;
     $this->popup .= '</script>'.PHP_EOL;
     return $this->popup;
-  } 
+  }
 
 }

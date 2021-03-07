@@ -49,6 +49,75 @@ var FFCTABLE = {
           if (item.contact.identica && !item.contact.identica.match(/^identica:.*/)) {
             item.contact.identica = "identica:" + item.contact.identica;
           }
+          if (item.contact.matrix && !item.contact.matrix.match(/^http([s]?):\/\/.*/)) {
+            item.contact.matrix = "https://" + item.contact.matrix;
+          }
+
+
+          item.contacts =  [];
+          if (item.url) {
+            item.contacts.push({
+              type: 'home',
+               url : item.url
+            });
+          }
+
+          if (item.contact.email) {
+            item.contacts.push({
+              type: 'envelope',
+              url : item.contact.email
+            });
+          }
+
+          if (item.contact.ml) {
+            item.contacts.push({
+              type: 'comments-o',
+              url : item.contact.ml
+            });
+          }
+
+          if (item.contact.facebook) {
+            item.contacts.push({
+              type: 'facebook',
+              url : item.contact.facebook
+            });
+          }
+
+          if (item.contact.twitter) {
+            item.contacts.push({
+              type: 'twitter',
+              url : item.contact.twitter
+            });
+          }
+
+          if (item.contact.irc) {
+            item.contacts.push({
+              type: 'commenting-o',
+              url : item.contact.irc
+            });
+          }
+
+          if (item.contact.jabber) {
+            item.contacts.push({
+              type: 'xmpp',
+              url : item.contact.jabber
+            });
+          }
+
+          if (item.contact.identica) {
+            item.contacts.push({
+              type: 'identica',
+              url : item.contact.identicy
+            });
+          }
+
+          if (item.contact.matrix) {
+            item.contacts.push({
+              type: 'matrix-org',
+              url : item.contact.matrix
+            });
+          }
+
           item.distance = 40008000;
           item.rank = 0;
         });
@@ -73,7 +142,7 @@ var FFCTABLE = {
     } else {
       email = this.email;
     }
-    jQuery.ajax({ 
+    jQuery.ajax({
       url: "https://nominatim.openstreetmap.org/?format=json&limit=1&addressdetails=0&q="+zip+"&email="+email,
       table: this,
       callback: callback,
