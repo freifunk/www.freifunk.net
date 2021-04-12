@@ -36,7 +36,7 @@ function ffcommunitymltable($atts)
     wp_enqueue_script("footable", plugin_dir_url( __FILE__ ). "js/footable.js");
     wp_enqueue_script("footablesort", plugin_dir_url( __FILE__ ). "js/footable.sort.js");
     wp_enqueue_style("cssfootablecore", plugin_dir_url( __FILE__ ). "css/footable.core.css");
-    $summaryUrl = esc_url($a['summaryurl']);
+    $summaryUrl = esc_url_raw($a['summaryurl']);
     $columns = preg_match("/^[a-z,]*$/", $a['columns']) === 1 ? explode(',', $a['columns']) : explode(',', 'name,city');
     $scriptid = uniqid("table-ml-data");
 
