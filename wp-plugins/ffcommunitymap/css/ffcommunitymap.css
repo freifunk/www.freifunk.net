@@ -75,6 +75,10 @@ span.community-popup>ul.contacts>li {
     padding-left: 0;
 }
 
+table.community-table span.community-popup>ul.contacts>li {
+    margin: 0px 5px 0px 0px!important;
+}
+
 .footable-header>th, .footable-details th {
     font-size: 1.2rem;
     line-height: 25px;
