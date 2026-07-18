@@ -3,7 +3,7 @@
 Plugin Name: RSS in Page (for freifunk.net)
 Plugin URI: https://github.com/freifunk/www.freifunk.net/edit/master/wp-plugins/rss-in-page
 Description: short code [rssinpage rssfeed='feedURL'] generates a list of RSS feed items with date, title, link and description; now support muiltiple feed URLs separated by a comma e.g. rssfeed='feedurl1, feedurl2' - optional attributes: rssitems='number' sets the number of items to return, default is 5; rssorder='asc' returns items from oldest to newest, default is 'desc' which returns items from newest to oldest; rsstarget allows for feed link to be opened in new window by setting to '_blank', default is '_self'; rssdateformat allows item date to be formatted using php date parameters, default is RFC 2822 formatted date; rssdescription='no' suppress description display, default is to show it; rsscss allows you to set a css class to style the list, default is the content list style in the theme; rssformat allows you to format the output using format parameters e.g. the default x: Y - w&lt;br&gt;z where x is the date, Y is the title with a link, y is the title, z is the description and w is the feed title; rsstitlelength allows you to truncate the title to a certain character length; rssdescriptionlength allows you to truncate the description to a certain character length; rsstimezone allows you to set the timezone in which the feed datetime will be displayed, default is UTC.
-Version: 2.9.3f
+Version: 2.9.4
 Author: Titus Bicknell, Andreas Braeu
 Author URI: http://titusbicknell.com
  */
@@ -250,49 +250,60 @@ function rssinpage( $atts ) {
 			}
 		}
 
-		// Protect placeholders, sanitize literal markup in rssformat, then restore values.
-		$tokens = array(
-			"\x01P\x01" => $p,
-			"\x01W\x01" => $W,
-			"\x01w\x01" => $w,
-			"\x01X\x01" => $x,
-			"\x01Y\x01" => $Y,
-			"\x01y\x01" => $y,
-			"\x01Z\x01" => $z,
-			"\x01A\x01" => $a,
+		// Build output char-by-char (same placeholder letters as before).
+		// Only the placeholder values are trusted/escaped HTML; literal format text is escaped.
+		$placeholders = array(
+			'p' => $p,
+			'W' => $W,
+			'w' => $w,
+			'x' => $x,
+			'Y' => $Y,
+			'y' => $y,
+			'z' => $z,
+			'a' => $a,
 		);
 
-		$format_masked = strtr(
-			$rssformat,
-			array(
-				'p' => "\x01P\x01",
-				'W' => "\x01W\x01",
-				'w' => "\x01w\x01",
-				'x' => "\x01X\x01",
-				'Y' => "\x01Y\x01",
-				'y' => "\x01y\x01",
-				'z' => "\x01Z\x01",
-				'a' => "\x01A\x01",
-			)
-		);
+		$rssformatoutput = '';
+		$format_chars    = str_split( $rssformat );
+		$buffer          = '';
 
-		$format_safe = wp_kses(
-			$format_masked,
-			array(
-				'br' => array(),
-				'p'  => array(),
-				'span' => array(
-					'class' => true,
-				),
-				'strong' => array(),
-				'em'     => array(),
-				'b'      => array(),
-				'i'      => array(),
-			)
-		);
+		foreach ( $format_chars as $char ) {
+			if ( isset( $placeholders[ $char ] ) ) {
+				if ( $buffer !== '' ) {
+					$rssformatoutput .= wp_kses(
+						$buffer,
+						array(
+							'br'     => array(),
+							'span'   => array( 'class' => true ),
+							'strong' => array(),
+							'em'     => array(),
+							'b'      => array(),
+							'i'      => array(),
+						)
+					);
+					$buffer = '';
+				}
+				$rssformatoutput .= $placeholders[ $char ];
+			} else {
+				$buffer .= $char;
+			}
+		}
 
-		$rssformatoutput = strtr( $format_safe, $tokens );
-		$rssreturn      .= '<li>' . $rssformatoutput . '</li>';
+		if ( $buffer !== '' ) {
+			$rssformatoutput .= wp_kses(
+				$buffer,
+				array(
+					'br'     => array(),
+					'span'   => array( 'class' => true ),
+					'strong' => array(),
+					'em'     => array(),
+					'b'      => array(),
+					'i'      => array(),
+				)
+			);
+		}
+
+		$rssreturn .= '<li>' . $rssformatoutput . '</li>';
 		$i++;
 	}
 
